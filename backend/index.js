@@ -10,17 +10,18 @@ app.use(cors({ origin: 'http://localhost:3000' }));
 
 // Swagger 설정
 const swaggerOptions = {
-  swaggerDefinition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'My Mono-repo API',
-      version: '1.0.0',
-      description: 'Mono-repo 구조의 API 문서',
+    swaggerDefinition: {
+      openapi: '3.0.0',
+      info: {
+        title: 'My Mono-repo API',
+        version: '1.0.0',
+        description: 'Mono-repo 구조의 API 문서',
+      },
+      servers: [{ url: 'http://localhost:5001' }],
     },
-    servers: [{ url: 'http://localhost:5001' }],
-  },
-  apis: ['./backend/*.js'],
-};
+    apis: ['index.js'],  // 실제 파일로 변경
+  };
+
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
