@@ -16,9 +16,17 @@ const swaggerDefinition = yaml.parse(swaggerFile);
 
 // Swagger 설정
 const swaggerOptions = {
-  swaggerDefinition,
-  apis: [], // yaml 파일을 사용하므로 apis는 비워둠
-};
+    swaggerDefinition: {
+      openapi: '3.0.0',
+      info: {
+        title: 'My Mono-repo API',
+        version: '1.0.0',
+        description: 'Mono-repo 구조의 API 문서',
+      },
+      servers: [{ url: 'http://localhost:5001' }],
+    },
+    apis: ['./backend/index.js'],  // 실제 파일 경로로 수정
+  };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
