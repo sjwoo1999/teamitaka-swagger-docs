@@ -18,9 +18,9 @@
     "swagger-ui-express": "^4.1.6"
   },
   "devDependencies": {
+    "live-server": "^1.2.0",
     "nodemon": "^2.0.15",
-    "serve": "^14.2.4",
-    "live-server": "^1.2.2"
+    "serve": "^14.2.4"
   },
   "author": "",
   "license": "ISC"
