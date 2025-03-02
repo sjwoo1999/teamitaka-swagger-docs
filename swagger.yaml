@@ -6,7 +6,6 @@ info:
 servers:
   - url: http://localhost:3000
     description: 로컬 개발 서버
-
 paths:
   # 관리자 관련 엔드포인트
   /admin/login:
