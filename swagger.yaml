@@ -42,7 +42,7 @@ paths:
                     description: JWT 토큰
                   message:
                     type: string
-                    example: "관리자 로그인 성공"
+                    example: '관리자 로그인 성공'
         '401':
           description: 비밀번호 오류
           content:
@@ -101,7 +101,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "✅ 모든 인증된 이메일이 삭제되었습니다."
+                    example: '✅ 모든 인증된 이메일이 삭제되었습니다.'
         '500':
           description: 서버 오류
           content:
@@ -186,7 +186,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "지원이 승인되었습니다."
+                    example: '지원이 승인되었습니다.'
                   updatedApplication:
                     $ref: '#/components/schemas/Application'
         '500':
@@ -218,7 +218,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "지원이 거절되었습니다."
+                    example: '지원이 거절되었습니다.'
                   updatedApplication:
                     $ref: '#/components/schemas/Application'
         '500':
@@ -251,7 +251,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "✅ 회원가입 성공!"
+                    example: '✅ 회원가입 성공!'
                   user:
                     $ref: '#/components/schemas/User'
         '400':
@@ -294,7 +294,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "✅ 로그인 성공!"
+                    example: '✅ 로그인 성공!'
                   token:
                     type: string
                     description: JWT 토큰
@@ -426,7 +426,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "✅ 모든 인증된 이메일이 삭제되었습니다."
+                    example: '✅ 모든 인증된 이메일이 삭제되었습니다.'
         '500':
           description: 서버 오류
           content:
@@ -455,7 +455,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "임시저장되었습니다."
+                    example: '임시저장되었습니다.'
                   draftRecruitment:
                     $ref: '#/components/schemas/RecruitmentDraft'
         '500':
@@ -516,7 +516,7 @@ paths:
                   description: 추가할 사용자 ID
                 role:
                   type: string
-                  description: 팀원 역할 (기본값: "팀원")
+                  description: '팀원 역할 (기본값: "팀원")'
               required:
                 - user_id
       responses:
@@ -567,7 +567,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "팀원 역할이 수정되었습니다."
+                    example: '팀원 역할이 수정되었습니다.'
                   member:
                     $ref: '#/components/schemas/ProjectMember'
         '404':
@@ -604,7 +604,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "팀원이 삭제되었습니다."
+                    example: '팀원이 삭제되었습니다.'
         '404':
           description: 팀원 없음
           content:
@@ -805,7 +805,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "프로젝트가 삭제되었습니다."
+                    example: '프로젝트가 삭제되었습니다.'
         '500':
           description: 서버 오류
           content:
@@ -936,7 +936,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "모집공고가 수정되었습니다."
+                    example: '모집공고가 수정되었습니다.'
                   updatedRecruitment:
                     $ref: '#/components/schemas/Recruitment'
         '500':
@@ -967,7 +967,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "모집공고가 삭제되었습니다."
+                    example: '모집공고가 삭제되었습니다.'
         '500':
           description: 서버 오류
           content:
@@ -1076,7 +1076,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "Review deleted"
+                    example: 'Review deleted'
         '404':
           description: 리뷰 없음 또는 권한 없음
           content:
@@ -1329,7 +1329,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "타임라인 이벤트가 삭제되었습니다."
+                    example: '타임라인 이벤트가 삭제되었습니다.'
         '404':
           description: 이벤트 없음
           content:
@@ -1394,7 +1394,7 @@ paths:
                   description: 할 일 내용
                 is_completed:
                   type: boolean
-                  description: 완료 여부 (기본값: false)
+                  description: '완료 여부 (기본값: false)'
               required:
                 - content
       responses:
@@ -1488,7 +1488,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "할 일이 삭제되었습니다."
+                    example: '할 일이 삭제되었습니다.'
         '404':
           description: 할 일 없음
           content:
@@ -1531,7 +1531,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "OTP 전송 완료"
+                    example: 'OTP 전송 완료'
         '400':
           description: 입력 오류 또는 지원되지 않는 학교
           content:
@@ -1574,7 +1574,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "인증 성공"
+                    example: '인증 성공'
                   univName:
                     type: string
                     description: 대학 이름
@@ -1673,7 +1673,7 @@ components:
           description: 해시된 비밀번호
         role:
           type: string
-          default: "ADMIN"
+          default: 'ADMIN'
           description: 관리자 역할
       required:
         - email
@@ -1700,7 +1700,7 @@ components:
             - PENDING
             - APPROVED
             - REJECTED
-          default: "PENDING"
+          default: 'PENDING'
           description: 지원 상태
       required:
         - user_id
@@ -1761,10 +1761,10 @@ components:
         status:
           type: string
           enum:
-            - "예정"
-            - "진행 중"
-            - "완료"
-          default: "예정"
+            - '예정'
+            - '진행 중'
+            - '완료'
+          default: '예정'
           description: 프로젝트 상태
         role:
           type: string
@@ -1792,9 +1792,9 @@ components:
         role:
           type: string
           enum:
-            - "팀장"
-            - "팀원"
-          default: "팀원"
+            - '팀장'
+            - '팀원'
+          default: '팀원'
           description: 역할
         joined_at:
           type: string
@@ -1803,9 +1803,9 @@ components:
         status:
           type: string
           enum:
-            - "활성"
-            - "비활성"
-          default: "활성"
+            - '활성'
+            - '비활성'
+          default: '활성'
           description: 상태
       required:
         - project_id
@@ -1828,9 +1828,9 @@ components:
         status:
           type: string
           enum:
-            - "OPEN"
-            - "CLOSED"
-          default: "OPEN"
+            - 'OPEN'
+            - 'CLOSED'
+          default: 'OPEN'
           description: 상태
         user_id:
           type: string
@@ -2044,16 +2044,16 @@ components:
         userType:
           type: string
           enum:
-            - "ADMIN"
-            - "MEMBER"
-          default: "MEMBER"
+            - 'ADMIN'
+            - 'MEMBER'
+          default: 'MEMBER'
           description: 사용자 유형
         role:
           type: string
           enum:
-            - "ADMIN"
-            - "MEMBER"
-          default: "MEMBER"
+            - 'ADMIN'
+            - 'MEMBER'
+          default: 'MEMBER'
           description: 역할
         university:
           type: string

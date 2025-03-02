@@ -2,8 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
-const fs = require('fs');  // fs 모듈 불러오기
-const yaml = require('yaml');  // yaml 모듈 불러오기
+const fs = require('fs'); // fs 모듈 불러오기
+const yaml = require('yaml'); // yaml 모듈 불러오기
 
 const app = express();
 
@@ -17,7 +17,7 @@ const swaggerDefinition = yaml.parse(swaggerFile);
 // Swagger 설정
 const swaggerOptions = {
   swaggerDefinition,
-  apis: [],  // yaml 파일을 사용하므로 apis는 비워둠
+  apis: [], // yaml 파일을 사용하므로 apis는 비워둠
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
