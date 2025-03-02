@@ -17,7 +17,7 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'Mono-repo 구조의 API 문서',
     },
-    servers: [{ url: 'http://localhost:5000' }],
+    servers: [{ url: 'http://localhost:5001' }],
   },
   apis: ['./backend/*.js'],
 };
