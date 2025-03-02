@@ -1,0 +1,24 @@
+{
+  "name": "my-mono-repo",
+  "version": "1.0.0",
+  "description": "통합 package.json을 사용한 Mono-repo 프로젝트",
+  "main": "backend/index.js",
+  "scripts": {
+    "start:backend": "node backend/index.js",
+    "dev:backend": "nodemon backend/index.js",
+    "serve:frontend": "serve frontend"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "glob": "^11.0.1",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.1.6"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "serve": "^14.2.4"
+  },
+  "author": "",
+  "license": "ISC"
+}

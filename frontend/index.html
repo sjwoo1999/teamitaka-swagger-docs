@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Mono-repo</title>
+  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@3/swagger-ui.css">
+</head>
+<body>
+  <h1>My Mono-repo 프론트엔드</h1>
+  <div id="swagger-ui"></div>
+  <script src="https://unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js"></script>
+  <script>
+    SwaggerUIBundle({
+      url: 'http://localhost:5000/api-docs',
+      dom_id: '#swagger-ui',
+      presets: [SwaggerUIBundle.presets.apis],
+    });
+  </script>
+</body>
+</html>
