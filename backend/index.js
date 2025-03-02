@@ -9,17 +9,10 @@ const app = express();
 app.use(cors({ origin: 'http://localhost:3000' }));
 
 // Swagger 설정
+const swaggerFile = fs.readFileSync('./swagger.yaml', 'utf8');
 const swaggerOptions = {
-    swaggerDefinition: {
-      openapi: '3.0.0',
-      info: {
-        title: 'My Mono-repo API',
-        version: '1.0.0',
-        description: 'Mono-repo 구조의 API 문서',
-      },
-      servers: [{ url: 'http://localhost:5001' }],
-    },
-    apis: ['index.js'],  // 실제 파일로 변경
+    definition: yaml.parse(swaggerFile), // swagger.yaml 파일 로드
+    apis: [], // YAML 파일을 사용하므로 apis는 비워둠
   };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
