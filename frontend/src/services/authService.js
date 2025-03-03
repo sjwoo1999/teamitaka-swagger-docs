@@ -3,8 +3,13 @@ import axios from 'axios';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 export const getCsrfToken = async () => {
-    const response = await axios.get(`${API_URL}/csrf-token`, { withCredentials: true });
-    return response.data.csrfToken;
+    try {
+        const response = await axios.get(`${API_URL}/csrf-token`, { withCredentials: true });
+        return response.data.csrfToken;
+    } catch (error) {
+        console.error('CSRF 토큰 요청 실패:', error);
+        throw error;
+    }
 };
 
 export const login = async (username, password, csrfToken) => {

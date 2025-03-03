@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCsrfToken, login } from '../services/authService';
+import { auth } from '../firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import './MainPage.css';
 
 function MainPage() {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [csrfToken, setCsrfToken] = useState('');
     const [message, setMessage] = useState('');
@@ -20,12 +22,14 @@ function MainPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const data = await login(username, password, csrfToken);
-            localStorage.setItem('token', data.token);
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const idToken = await userCredential.user.getIdToken();
+            const data = await login(email, password, csrfToken); // 백엔드와 동기화
+            localStorage.setItem('token', idToken);
             setMessage('로그인 성공! Swagger 문서로 이동합니다.');
             setTimeout(() => navigate('/api-docs'), 1000);
         } catch (error) {
-            setMessage(error.response?.data?.message || '로그인 실패');
+            setMessage(error.message || '로그인 실패');
         }
     };
 
@@ -36,13 +40,13 @@ function MainPage() {
                 <p>Teamitaka의 Swagger 문서에 오신 것을 환영합니다.<br />승인된 사용자만 접근 가능합니다.</p>
                 <form onSubmit={handleSubmit}>
                     <div className="input-group">
-                        <label htmlFor="username">사용자 이름</label>
+                        <label htmlFor="email">이메일</label>
                         <input
-                            type="text"
-                            id="username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            placeholder="사용자 이름을 입력하세요"
+                            type="email"
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="이메일을 입력하세요"
                             required
                         />
                     </div>
