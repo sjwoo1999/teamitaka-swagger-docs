@@ -8,6 +8,7 @@ function MainPage() {
     const [password, setPassword] = useState('');
     const [csrfToken, setCsrfToken] = useState('');
     const [message, setMessage] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -29,29 +30,45 @@ function MainPage() {
     };
 
     return (
-        <div className="login-container">
-            <h1>Teamitaka 로그인</h1>
-            <p>Teamitaka의 Swagger 문서에 오신 것을 환영합니다.<br />승인된 사용자만 접근 가능합니다.</p>
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="username">사용자 이름</label>
-                <input
-                    type="text"
-                    id="username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                />
-                <label htmlFor="password">비밀번호</label>
-                <input
-                    type="password"
-                    id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-                <button type="submit">로그인</button>
-            </form>
-            <p>{message}</p>
+        <div className="login-page">
+            <div className="login-container">
+                <h1>Teamitaka 로그인</h1>
+                <p>Teamitaka의 Swagger 문서에 오신 것을 환영합니다.<br />승인된 사용자만 접근 가능합니다.</p>
+                <form onSubmit={handleSubmit}>
+                    <div className="input-group">
+                        <label htmlFor="username">사용자 이름</label>
+                        <input
+                            type="text"
+                            id="username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="사용자 이름을 입력하세요"
+                            required
+                        />
+                    </div>
+                    <div className="input-group">
+                        <label htmlFor="password">비밀번호</label>
+                        <div className="password-wrapper">
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                id="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="비밀번호를 입력하세요"
+                                required
+                            />
+                            <span
+                                className="password-toggle"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? '숨기기' : '보기'}
+                            </span>
+                        </div>
+                    </div>
+                    <button type="submit">로그인</button>
+                    <p className="error-message">{message}</p>
+                </form>
+            </div>
         </div>
     );
 }
