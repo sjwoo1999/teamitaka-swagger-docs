@@ -1,24 +1,38 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Mono-repo</title>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/swagger-ui-dist@3/swagger-ui.css"
-    />
-  </head>
-  <body>
-    <h1>My Mono-repo 프론트엔드</h1>
-    <div id="swagger-ui"></div>
-    <script src="https://unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+</head>
+<body>
+    <h1>로그인</h1>
+    <form id="loginForm">
+        <input type="text" id="username" placeholder="사용자 이름" required>
+        <input type="password" id="password" placeholder="비밀번호" required>
+        <button type="submit">로그인</button>
+    </form>
     <script>
-      SwaggerUIBundle({
-        url: 'http://localhost:5001/api-docs', // 백엔드 포트와 일치
-        dom_id: '#swagger-ui',
-        presets: [SwaggerUIBundle.presets.apis],
-      });
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const response = await fetch('http://localhost:5001/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('token', data.token);
+                window.location.href = 'http://localhost:5001/api-docs';
+            } else {
+                alert('로그인 실패');
+            }
+        });
     </script>
-  </body>
+</body>
 </html>
