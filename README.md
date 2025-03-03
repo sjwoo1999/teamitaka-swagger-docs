@@ -51,8 +51,9 @@
 <p>백엔드와 프론트엔드 의존성을 설치합니다.</p>
 <pre><code class="language-bash"># 백엔드 의존성 설치
 npm install express cors jsonwebtoken csurf cookie-parser swagger-ui-express yaml
+</code></pre>
 
-# 프론트엔드 의존성 (serve 사용 시)
+<pre><code class="language-baseh"># 프론트엔드 의존성 (serve 사용 시)
 npm install -g serve
 </code></pre>
 
