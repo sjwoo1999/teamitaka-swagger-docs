@@ -1,13 +1,20 @@
-const yaml = require('yaml');
-const fs = require('fs');
-const path = require('path');
+import React from 'react';
+import SwaggerUI from 'swagger-ui-react';
+import 'swagger-ui-react/swagger-ui.css';
 
-let swaggerDocument;
-try {
-    const swaggerFile = fs.readFileSync(path.join(__dirname, '../../swagger.yaml'), 'utf8');
-    swaggerDocument = yaml.parse(swaggerFile);
-} catch (error) {
-    console.error('Swagger 파일 로드 실패:', error.message);
-    process.exit(1);
-}
-module.exports = swaggerDocument;
+const SwaggerDocument = () => {
+  const token = localStorage.getItem('token');
+  return (
+    <SwaggerUI
+      url="http://localhost:3001/api-docs/swagger.json" // Swagger JSON 경로
+      requestInterceptor={(req) => {
+        if (token) {
+          req.headers['Authorization'] = `Bearer ${token}`;
+        }
+        return req;
+      }}
+    />
+  );
+};
+
+export default SwaggerDocument;

@@ -1,20 +1,60 @@
 const express = require('express');
+const cors = require('cors');
+const jwt = require('jsonwebtoken');
+const csurf = require('csurf');
 const cookieParser = require('cookie-parser');
+const swaggerUi = require('swagger-ui-express');
+const yaml = require('yaml');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3001;
 
-app.use(require('./src/middleware/cors')); // CORS 설정
+// Swagger 문서 로드
+const swaggerFile = fs.readFileSync(path.join(__dirname, 'swagger.yaml'), 'utf8');
+const swaggerDocument = yaml.parse(swaggerFile);
+
+// 미들웨어 설정
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGIN,
+  credentials: true,
+}));
 app.use(cookieParser());
 app.use(express.json());
-app.use(require('./src/middleware/csrf')); // CSRF 보호
+app.use(csurf({ cookie: { httpOnly: true, secure: false } }));
 
-// 라우트
-app.use('/auth', require('./src/routes/auth'));
-app.use('/api-docs', require('./src/routes/apiDocs'));
-app.use('/', require('./src/routes/csrf'));
-
-app.listen(port, () => {
-    console.log(`서버가 http://localhost:${port}에서 실행 중입니다.`);
+// CSRF 토큰 발급
+app.get('/csrf-token', (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
 });
+
+// JWT 인증 미들웨어
+const authenticateJWT = (req, res, next) => {
+  const token = req.cookies.token || req.headers['authorization']?.split(' ')[1];
+  if (!token) return res.status(401).json({ message: '토큰이 없습니다.' });
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ message: '유효하지 않은 토큰입니다.' });
+    req.user = user;
+    next();
+  });
+};
+
+// 로그인 엔드포인트
+app.post('/auth/login', (req, res) => {
+  const { username, password } = req.body;
+  if (username === 'admin' && password === 'password123') {
+    const token = jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.cookie('token', token, { httpOnly: true, secure: false });
+    res.json({ message: '로그인 성공', token });
+  } else {
+    res.status(401).json({ message: '잘못된 사용자 이름 또는 비밀번호' });
+  }
+});
+
+// 보호된 Swagger 문서 제공
+app.use('/api-docs', authenticateJWT, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// 서버 시작
+app.listen(port, () => console.log(`서버가 ${port}번 포트에서 실행 중`));
