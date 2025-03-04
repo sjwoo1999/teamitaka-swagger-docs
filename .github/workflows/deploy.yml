@@ -1,4 +1,4 @@
-name: Deploy to Firebase Hosting
+name: Deploy to Firebase
 
 on:
   push:
@@ -7,8 +7,11 @@ on:
       - develop
 
 jobs:
-  deploy:
+  deploy-frontend:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -21,21 +24,54 @@ jobs:
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
-      - name: Deploy to Firebase with Service Account
+      - name: Set up Firebase Service Account
         run: |
-          # GitHub Secrets에서 서비스 계정 키를 가져와 파일로 출력
-          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" > serviceAccountKey.json
-          
-          # 환경 변수 설정
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" > ./serviceAccountKey.json
           export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/serviceAccountKey.json
-          
-          # 현재 브랜치에 따라 배포 타겟 결정
+
+      - name: Deploy Frontend to Firebase Hosting
+        run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            firebase deploy --only hosting:production --project teamitaka-swagger --debug
+            firebase deploy --only hosting:production --project your-project-id --debug
           elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
-            firebase deploy --only hosting:development --project teamitaka-swagger --debug
+            firebase deploy --only hosting:development --project your-project-id --debug
           fi
-          
-          # 보안을 위해 임시 파일 삭제
-          rm -f serviceAccountKey.json
-        shell: bash
+
+      - name: Clean up
+        run: rm -f ./serviceAccountKey.json
+
+  deploy-backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      - name: Set up Firebase Service Account
+        run: |
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" > ./serviceAccountKey.json
+          export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/serviceAccountKey.json
+
+      - name: Deploy Backend to Firebase Functions
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            firebase deploy --only functions --project your-project-id --debug
+          elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
+            firebase deploy --only functions --project your-project-id --debug
+          fi
+
+      - name: Clean up
+        run: rm -f ./serviceAccountKey.json
