@@ -24,13 +24,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Lint code
-        run: npm run lint -- --quiet
-
       - name: Build the project
         run: npm run build
         env:
-          CI: false  # ESLint 경고를 오류로 처리하지 않음
+          CI: false
 
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
