@@ -24,7 +24,7 @@ function MainPage() {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const idToken = await userCredential.user.getIdToken();
-            const data = await login(email, password, csrfToken); // 백엔드와 동기화
+            // const data = await login(email, password, csrfToken); // 백엔드와 동기화
             localStorage.setItem('token', idToken);
             setMessage('로그인 성공! Swagger 문서로 이동합니다.');
             setTimeout(() => navigate('/api-docs'), 1000);

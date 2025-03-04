@@ -1,24 +1,45 @@
-name: Build Frontend and Backend
+name: Firebase Deploy
+
+# 배포를 트리거할 이벤트 정의
 on:
   push:
     branches:
       - main
+      - develop
+
 jobs:
-  build-frontend:
+  deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./frontend
     steps:
-      - uses: actions/checkout@v2
-      - run: npm install
-      - run: npm run build
-  build-backend:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./backend
-    steps:
-      - uses: actions/checkout@v2
-      - run: npm install
-      - run: npm run build
+      # 코드 체크아웃
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Node.js 환경 설정
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      # 의존성 설치
+      - name: Install dependencies
+        run: npm install
+
+      # Firebase CLI 설치
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      # 서비스 계정 키 설정
+      - name: Set up Firebase service account
+        run: |
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" > serviceAccountKey.json
+          export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/serviceAccountKey.json
+
+      # 환경별 배포
+      - name: Deploy to Firebase
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            firebase deploy --only hosting:production --project your-prod-project-id
+          elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
+            firebase deploy --only hosting:development --project your-dev-project-id
+          fi
