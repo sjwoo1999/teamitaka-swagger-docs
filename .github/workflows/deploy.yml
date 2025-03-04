@@ -10,6 +10,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend  # frontend 폴더에서 명령어 실행
     steps:
       # 코드 체크아웃
       - name: Checkout code
@@ -24,6 +27,10 @@ jobs:
       # 의존성 설치
       - name: Install dependencies
         run: npm install
+
+      # 프로젝트 빌드
+      - name: Build the project
+        run: npm run build
 
       # Firebase CLI 설치
       - name: Install Firebase CLI
@@ -43,3 +50,7 @@ jobs:
           elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
             firebase deploy --only hosting:development --project your-dev-project-id
           fi
+
+      # 보안 강화를 위한 클린업
+      - name: Clean up
+        run: rm -f serviceAccountKey.json
