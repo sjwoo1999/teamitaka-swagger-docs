@@ -1,4 +1,4 @@
-name: Firebase Deploy
+name: Deploy to Firebase Hosting
 
 on:
   push:
@@ -7,46 +7,29 @@ on:
       - develop
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./frontend # 프로젝트 디렉토리에 맞게 조정하세요
     steps:
-      # 1. 코드 체크아웃
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # 2. Node.js 환경 설정
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: '18' # 프로젝트에 맞는 버전으로 변경 가능
+          node-version: '18'
 
-      # 3. 의존성 설치
-      - name: Install dependencies
-        run: npm install
-
-      # 4. 프로젝트 빌드
-      - name: Build the project
-        run: npm run build
-        env:
-          CI: false # 빌드 중 경고를 오류로 처리하지 않음
-
-      # 5. Firebase CLI 설치
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
-      # 6. 서비스 계정 설정 및 배포 (핵심 해결 단계)
       - name: Deploy to Firebase with Service Account
         run: |
-          # 서비스 계정 키를 파일로 출력
+          # GitHub Secrets에서 서비스 계정 키를 가져와 파일로 출력
           echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" > serviceAccountKey.json
           
           # 환경 변수 설정
           export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/serviceAccountKey.json
           
-          # 브랜치 조건에 따라 배포 타겟 결정
+          # 현재 브랜치에 따라 배포 타겟 결정
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
             firebase deploy --only hosting:production --project teamitaka-swagger --debug
           elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
@@ -55,3 +38,4 @@ jobs:
           
           # 보안을 위해 임시 파일 삭제
           rm -f serviceAccountKey.json
+        shell: bash
