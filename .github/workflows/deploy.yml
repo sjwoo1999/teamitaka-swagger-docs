@@ -32,9 +32,9 @@ jobs:
       - name: Deploy Frontend to Firebase Hosting
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            firebase deploy --only hosting:production --project your-project-id --debug
+            firebase deploy --only hosting:production --project teamitaka-swagger --debug
           elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
-            firebase deploy --only hosting:development --project your-project-id --debug
+            firebase deploy --only hosting:development --project teamitaka-swagger --debug
           fi
 
       - name: Clean up
@@ -68,9 +68,9 @@ jobs:
       - name: Deploy Backend to Firebase Functions
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            firebase deploy --only functions --project your-project-id --debug
+            firebase deploy --only functions --project teamitaka-swagger --debug
           elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
-            firebase deploy --only functions --project your-project-id --debug
+            firebase deploy --only functions --project teamitaka-swagger --debug
           fi
 
       - name: Clean up
