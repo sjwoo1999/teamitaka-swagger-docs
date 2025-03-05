@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
+import { getAnalytics, logEvent } from 'firebase/analytics';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -17,7 +17,10 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
+const analytics = getAnalytics(app);
+
+// 페이지 로드 시 이벤트 기록 (예시)
+logEvent(analytics, 'page_view', { page_path: window.location.pathname });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
