@@ -22,7 +22,7 @@
     </ul>
     <h2>프로젝트 구조</h2>
     <p>
-        Mono-repo 구조를採用하여 프론트엔드와 백엔드를 각각의 디렉토리로 관리합니다. 아래는 프로젝트의 디렉토리 구조입니다:
+        Mono-repo 구조를 사용하여 프론트엔드와 백엔드를 각각의 디렉토리로 관리합니다. 아래는 프로젝트의 디렉토리 구조입니다:
     </p>
     <pre><code class="language-text">
 teamitaka-swagger-docs/
@@ -71,7 +71,7 @@ npm install
 PORT=3001
 JWT_SECRET=your-secret-key-here
 ALLOWED_ORIGIN=http://localhost:3000
-FIREBASE_SERVICE_ACCOUNT_KEY_B64=&lt;Base64-encoded-service-account-key&gt;
+FIREBASE_SERVICE_ACCOUNT_KEY_B64=<Base64-encoded-service-account-key>
     </code></pre>
     <h4>frontend/.env</h4>
     <pre><code class="language-text">
@@ -110,8 +110,7 @@ base64 serviceAccountKey.json > encoded_key.txt
         <li><strong>저장</strong>: GitHub Repository Settings > Secrets에 <code>FIREBASE_SERVICE_ACCOUNT_KEY_B64</code>로 저장합니다.</li>
     </ol>
     <h3>deploy.yml 예시</h3>
-
-```yaml
+    <pre><code class="language-yaml">
 name: Firebase Deploy
 
 on:
@@ -156,8 +155,8 @@ jobs:
           fi
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-```
-  <h2>보안 설정</h2>
+    </code></pre>
+    <h2>보안 설정</h2>
     <ul>
         <li><strong>SOP(Same-Origin Policy)</strong>: 프론트엔드(localhost:3000)와 백엔드(localhost:3001)의 출처가 다르므로 CORS 설정을 통해 접근을 허용.</li>
         <li><strong>CORS</strong>: 백엔드에서 <code>ALLOWED_ORIGIN</code>에 지정된 출처만 허용하며, 인증 정보 전송을 지원.</li>
