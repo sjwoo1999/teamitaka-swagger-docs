@@ -1,16 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithCustomToken } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-
-// Firebase 설정 (자신의 설정으로 교체)
-const firebaseConfig = {
-  apiKey: 'YOUR_API_KEY',
-  authDomain: 'YOUR_AUTH_DOMAIN',
-  projectId: 'YOUR_PROJECT_ID',
-};
-initializeApp(firebaseConfig);
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -40,7 +31,7 @@ const LoginPage = () => {
       <input
         type="email"
         value={email}
-        onChange={(e) => setEmail(e.targetValue)}
+        onChange={(e) => setEmail(e.target.value)} // 오타 수정
         placeholder="사용자 이름 (이메일)"
         style={{ display: 'block', margin: '10px 0', padding: '8px', width: '100%' }}
       />
