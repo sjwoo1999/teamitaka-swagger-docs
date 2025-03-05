@@ -164,18 +164,15 @@ base64 serviceAccountKey.json > encoded_key.txt
     </ul>
     <h2>작업 로그 (2025년 3월 5일)</h2>
     <p>2025년 3월 5일은 프로젝트 배포가 완료된 중요한 날입니다. 아래는 당일 작업의 상세 내역입니다:</p>
-    <h3>07:00 - 12:00</h3>
     <ul>
         <li><strong>Firebase 설정 완료</strong>: Firebase Hosting과 Functions 설정을 최종 점검.</li>
         <li><strong>프로덕션 환경 설정</strong>: 배포 환경을 프로덕션으로 전환.</li>
         <li><strong>오류 해결</strong>: ESLint 오류와 서비스 계정 키 관련 문제를 수정.</li>
     </ul>
-    <h3>12:00 - 15:00</h3>
     <ul>
         <li><strong>CI/CD 개선</strong>: <code>deploy.yml</code>을 여러 차례 업데이트하여 배포 파이프라인 최적화.</li>
         <li><strong>프론트엔드 배포</strong>: Firebase Hosting을 통해 프론트엔드 배포 완료.</li>
     </ul>
-    <h3>15:00 - 16:00</h3>
     <ul>
         <li><strong>서비스 계정 오류 발생</strong>: 초기 배포 시 올바르지 않은 서비스 계정 키를 사용함으로써 인증 실패 오류 발생 (<code>SyntaxError: Unexpected token t in JSON at position 4</code>).</li>
         <li><strong>해결 과정</strong>:
