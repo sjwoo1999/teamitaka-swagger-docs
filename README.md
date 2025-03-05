@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <h1>TeamItaka Swagger Docs 프로젝트</h1>
+    <h1>Teamitaka Swagger Docs 프로젝트</h1>
     <h2>개요</h2>
     <p>
         TeamItaka Swagger Docs 프로젝트는 TeamItaka의 백엔드 API 문서를 <strong>Swagger UI</strong>를 통해 제공하는 웹 애플리케이션입니다. 이 프로젝트는 로그인된 사용자만 접근할 수 있도록 보안을 강화했으며, <em>SOP(Same-Origin Policy)</em>, <em>CORS</em>, <em>CSRF</em>와 같은 보안 요소를 고려하여 설정되었습니다. 프론트엔드는 <strong>React</strong> 기반의 정적 웹 인터페이스로 구성되며, 백엔드는 <strong>Firebase Functions</strong>를 활용한 서버리스 로직으로 처리됩니다. 사용자는 프론트엔드에서 로그인 후 인증된 상태로 Swagger UI로 리다이렉트됩니다. 배포는 <strong>Firebase Hosting</strong>과 <strong>GitHub Actions</strong>를 통해 자동화됩니다.
