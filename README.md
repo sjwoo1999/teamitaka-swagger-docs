@@ -109,53 +109,53 @@ base64 serviceAccountKey.json > encoded_key.txt
         <li><strong>저장</strong>: GitHub Repository Settings > Secrets에 <code>FIREBASE_SERVICE_ACCOUNT_KEY_B64</code>로 저장합니다.</li>
     </ol>
     <h3>deploy.yml 예시</h3>
-    <pre><code class="language-yaml">
-name: Firebase Deploy
+    
+    name: Firebase Deploy
 
-on:
-  push:
-    branches:
-      - main
-      - develop
+    on:
+      push:
+        branches:
+          - main
+          - develop
 
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./frontend
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    jobs:
+      build-and-deploy:
+        runs-on: ubuntu-latest
+        defaults:
+          run:
+            working-directory: ./frontend
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '18'
+          - name: Set up Node.js
+            uses: actions/setup-node@v2
+            with:
+              node-version: '18'
 
-      - name: Install dependencies
-        run: npm install
+          - name: Install dependencies
+            run: npm install
 
-      - name: Build the project
-        run: npm run build
-        env:
-          CI: false
+          - name: Build the project
+            run: npm run build
+            env:
+              CI: false
 
-      - name: Install Firebase CLI
-        run: npm install -g firebase-tools
+          - name: Install Firebase CLI
+            run: npm install -g firebase-tools
 
-      - name: Deploy to Firebase
-        run: |
-          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | base64 -d > ../backend/serviceAccountKey.json
-          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            firebase deploy --only hosting:production --project teamitaka-swagger
-          elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
-            firebase deploy --only hosting:development --project teamitaka-swagger
-          fi
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-    </code></pre>
-    <h2>보안 설정</h2>
+          - name: Deploy to Firebase
+            run: |
+              echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | base64 -d > ../backend/serviceAccountKey.json
+              if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+                firebase deploy --only hosting:production --project teamitaka-swagger
+              elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
+                firebase deploy --only hosting:development --project teamitaka-swagger
+              fi
+            env:
+              FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
+  <h2>보안 설정</h2>
     <ul>
         <li><strong>SOP(Same-Origin Policy)</strong>: 프론트엔드(localhost:3000)와 백엔드(localhost:3001)의 출처가 다르므로 CORS 설정을 통해 접근을 허용.</li>
         <li><strong>CORS</strong>: 백엔드에서 <code>ALLOWED_ORIGIN</code>에 지정된 출처만 허용하며, 인증 정보 전송을 지원.</li>
