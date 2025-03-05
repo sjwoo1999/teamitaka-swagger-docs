@@ -3,8 +3,7 @@ name: Deploy to Firebase
 on:
   push:
     branches:
-      - main
-      - develop
+      - main  # develop 브랜치 제거
 
 jobs:
   deploy-frontend:
@@ -30,12 +29,7 @@ jobs:
           export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/serviceAccountKey.json
 
       - name: Deploy Frontend to Firebase Hosting
-        run: |
-          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            firebase deploy --only hosting:production --project teamitaka-swagger --debug
-          elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
-            firebase deploy --only hosting:development --project teamitaka-swagger --debug
-          fi
+        run: firebase deploy --only hosting:production --project teamitaka-swagger --debug
 
       - name: Clean up
         run: rm -f ./serviceAccountKey.json
@@ -66,12 +60,7 @@ jobs:
           export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/serviceAccountKey.json
 
       - name: Deploy Backend to Firebase Functions
-        run: |
-          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            firebase deploy --only functions --project teamitaka-swagger --debug
-          elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
-            firebase deploy --only functions --project teamitaka-swagger --debug
-          fi
+        run: firebase deploy --only functions --project teamitaka-swagger --debug
 
       - name: Clean up
         run: rm -f ./serviceAccountKey.json
