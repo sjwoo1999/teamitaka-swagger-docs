@@ -1,0 +1,10 @@
+[debug] [2025-03-05T11:38:52.322Z] ----------------------------------------------------------------------
+[debug] [2025-03-05T11:38:52.323Z] Command:       /usr/local/bin/firebase /Users/_woo_s.j/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase deploy --only hosting:production --project teamitaka-swagger-practice --debug
+[debug] [2025-03-05T11:38:52.323Z] CLI Version:   13.23.0
+[debug] [2025-03-05T11:38:52.323Z] Platform:      darwin
+[debug] [2025-03-05T11:38:52.323Z] Node Version:  v18.5.0
+[debug] [2025-03-05T11:38:52.327Z] Time:          Wed Mar 05 2025 20:38:52 GMT+0900 (Korean Standard Time)
+[debug] [2025-03-05T11:38:52.328Z] ----------------------------------------------------------------------
+[debug] 
+[error] 
+[error] Error: Not in a Firebase app directory (could not locate firebase.json)

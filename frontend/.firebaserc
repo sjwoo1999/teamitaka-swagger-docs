@@ -1,5 +1,12 @@
 {
   "projects": {
     "default": "teamitaka-swagger-practice"
+  },
+  "targets": {
+    "teamitaka-swagger-practice": {
+        "hosting": {
+            "production": ["teamitaka-swagger-practice"]
+        }
+    }
   }
 }
