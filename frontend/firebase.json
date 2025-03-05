@@ -1,16 +1,16 @@
 {
-    "hosting": [
-      {
-        "target": "production",
-        "site": "production-site-name",
-        "public": "build",
-        "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
-      },
-      {
-        "target": "development",
-        "site": "development-site-name",
-        "public": "build",
-        "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
-      }
-    ]
-  }
+  "hosting": [
+    {
+      "target": "production",
+      "site": "production-site-name",
+      "public": "build",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    },
+    {
+      "target": "development",
+      "site": "development-site-name",
+      "public": "build",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    }
+  ]
+}
