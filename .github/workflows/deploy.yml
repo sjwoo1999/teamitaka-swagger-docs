@@ -82,7 +82,6 @@ jobs:
 
       - name: Set up Firebase Service Account
         run: |
-          # Base64로 인코딩된 Service Account JSON을 디코딩하여 파일 생성
           echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" > serviceAccountKey.json
 
           # 파일 생성 여부 확인
