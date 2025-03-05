@@ -30,7 +30,10 @@ jobs:
         run: npm install -g firebase-tools
 
       - name: Set up Firebase Service Account
-        run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" > serviceAccountKey.json
+        run: |
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" > serviceAccountKey.json
+          ls -la serviceAccountKey.json  # Check if the file exists
+          cat serviceAccountKey.json     # Output the file contents for debugging
 
       - name: Deploy Frontend to Firebase Hosting
         run: firebase deploy --only hosting:production --project teamitaka-swagger-practice --debug
@@ -61,7 +64,10 @@ jobs:
         run: npm install -g firebase-tools
 
       - name: Set up Firebase Service Account
-        run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" > serviceAccountKey.json
+        run: |
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" > serviceAccountKey.json
+          ls -la serviceAccountKey.json  # Check if the file exists
+          cat serviceAccountKey.json     # Output the file contents for debugging
 
       - name: Deploy Backend to Firebase Functions
         run: firebase deploy --only functions --project teamitaka-swagger-practice --debug
