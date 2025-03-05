@@ -21,7 +21,7 @@ jobs:
           node-version: '18'
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci  # npm install 대신 npm ci로 더 안정적인 설치 보장
 
       - name: Build Frontend
         run: npm run build
@@ -32,16 +32,19 @@ jobs:
       - name: Set up Firebase Service Account
         run: |
           echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" > serviceAccountKey.json
-          ls -la serviceAccountKey.json  # Check if the file exists
-          cat serviceAccountKey.json     # Output the file contents for debugging
+          ls -la serviceAccountKey.json  # 파일 생성 여부 확인
+          cat serviceAccountKey.json     # 파일 내용 출력 (디버깅용)
+          jq . serviceAccountKey.json    # JSON 유효성 검사 (jq 설치 필요)
+        continue-on-error: true  # 디버깅 단계에서 오류 발생 시 워크플로우 중단 방지
 
       - name: Deploy Frontend to Firebase Hosting
-        run: firebase deploy --only hosting:production --project teamitaka-swagger-practice --debug
+        run: firebase deploy --only hosting:production --project teamitaka-swagger-practice --debug --non-interactive
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ./serviceAccountKey.json
 
       - name: Clean up
         run: rm -f ./serviceAccountKey.json
+        if: always()  # 성공 여부와 관계없이 실행
 
   deploy-backend:
     runs-on: ubuntu-latest
@@ -58,7 +61,7 @@ jobs:
           node-version: '18'
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci  # npm install 대신 npm ci로 더 안정적인 설치 보장
 
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
@@ -66,13 +69,16 @@ jobs:
       - name: Set up Firebase Service Account
         run: |
           echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" > serviceAccountKey.json
-          ls -la serviceAccountKey.json  # Check if the file exists
-          cat serviceAccountKey.json     # Output the file contents for debugging
+          ls -la serviceAccountKey.json  # 파일 생성 여부 확인
+          cat serviceAccountKey.json     # 파일 내용 출력 (디버깅용)
+          jq . serviceAccountKey.json    # JSON 유효성 검사 (jq 설치 필요)
+        continue-on-error: true  # 디버깅 단계에서 오류 발생 시 워크플로우 중단 방지
 
       - name: Deploy Backend to Firebase Functions
-        run: firebase deploy --only functions --project teamitaka-swagger-practice --debug
+        run: firebase deploy --only functions --project teamitaka-swagger-practice --debug --non-interactive
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ./serviceAccountKey.json
 
       - name: Clean up
         run: rm -f ./serviceAccountKey.json
+        if: always()
