@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TeamItaka Swagger Docs 프로젝트</title>
 </head>
 <body>
     <h1>TeamItaka Swagger Docs 프로젝트</h1>
