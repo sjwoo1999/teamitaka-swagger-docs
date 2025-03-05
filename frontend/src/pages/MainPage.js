@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getCsrfToken, login } from '../services/authService';
+import { getCsrfToken, /*login*/ } from '../services/authService';
 import { auth } from '../config/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import './MainPage.css';
@@ -8,7 +8,7 @@ import './MainPage.css';
 function MainPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [csrfToken, setCsrfToken] = useState('');
+    const [/*csrfToken*/, setCsrfToken] = useState('');
     const [message, setMessage] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
