@@ -88,7 +88,7 @@ jobs:
         run: |
           # Base64로 인코딩된 Service Account JSON을 디코딩하여 파일 생성
           echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | base64 -d > serviceAccountKey.json
-
+            
           # 파일 생성 여부 및 크기 확인
           if [ -s serviceAccountKey.json ]; then
             echo "File exists and is not empty."
@@ -96,9 +96,10 @@ jobs:
             echo "File is empty or does not exist."
             exit 1
           fi
-
-          # JSON 유효성 검사 및 오류 시 내용 출력
+          
+          # JSON 유효성 검사 및 오류 시 내용 출력 (선택 사항)
           jq . serviceAccountKey.json || head -n 5 serviceAccountKey.json
+        shell: /usr/bin/bash -e {0}
 
       - name: Deploy Backend to Firebase Functions
         run: firebase deploy --only functions --project teamitaka-swagger-practice --debug --non-interactive
