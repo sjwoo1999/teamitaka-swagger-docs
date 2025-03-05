@@ -28,7 +28,7 @@
 teamitaka-swagger-docs/
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml          # GitHub Actions 배포 설정
+│       └── deploy.yml        # GitHub Actions 배포 설정
 ├── backend/
 │   ├── src/
 │   │   ├── config/           # 설정 파일 (swagger.js 등)
