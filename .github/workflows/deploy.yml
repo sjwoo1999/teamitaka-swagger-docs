@@ -65,11 +65,11 @@ jobs:
         if: always()
         run: rm -f ./serviceAccountKey.json
 
-  deploy-backend:
+  deploy-functions:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./backend
+        working-directory: ./functions
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
