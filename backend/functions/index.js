@@ -12,10 +12,7 @@ const authenticateJWT = require("../src/middleware/authenticateFirebase.js");
 // Express 앱 초기화
 const app = express();
 
-const port = process.env.PORT || 8080;
-app.listen(port, () => {
-   console.log(`서버가 ${port} 포트에서 실행 중입니다.`);
-});
+// const port = process.env.PORT || 8080;
 
 // 미들웨어 설정
 app.use(cors({
