@@ -11,7 +11,7 @@ const path = require('path');
 const admin = require('firebase-admin');
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 8080;
 
 // Firebase Admin SDK 초기화
 admin.initializeApp({
