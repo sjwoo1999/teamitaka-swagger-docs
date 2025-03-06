@@ -31,7 +31,11 @@ app.get("/csrf-token", (req, res) => {
   res.json({ csrfToken: req.csrfToken() }); // 클라이언트에 CSRF 토큰 제공
 });
 
-exports.api = functions.onRequest({ timeoutSeconds: 120, memory: "512MiB" }, app);
+exports.api = functions.onRequest(
+   {timeoutSeconds: 120},
+   app
+);
+
 exports.helloWorld = functions.onRequest({ timeoutSeconds: 120 }, (req, res) => {
   logger.info("Hello logs!", { structuredData: true });
   res.send("Hello from Firebase!");
