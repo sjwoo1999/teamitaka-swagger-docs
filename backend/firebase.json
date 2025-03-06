@@ -4,43 +4,47 @@
     "indexes": "firestore.indexes.json"
   },
   "functions": [
-  {
-    "source": "functions",
-    "codebase": "default",
-    "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
-  }
-],
-    "emulators": {
-      "auth": {
-        "port": 9099
-      },
-      "functions": {
-        "port": 5001
-      },
-      "firestore": {
-        "port": 8080
-      },
-      "database": {
-        "port": 9000
-      },
-      "hosting": {
-        "port": 5000
-      },
-      "pubsub": {
-        "port": 8085
-      },
-      "storage": {
-        "port": 9199
-      },
-      "dataconnect": {
-        "port": 9399
-      },
-      "ui": {
-        "enabled": true,
-        "port": 4001
-      }
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
+    }
+  ],
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
     },
     "database": {
-      "rules": "database.rules.json"
+      "port": 9000
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "pubsub": {
+      "port": 8085
+    },
+    "storage": {
+      "port": 9199
+    },
+    "dataconnect": {
+      "port": 9399
+    },
+    "ui": {
+      "enabled": true,
+      "port": 4001
     }
+  },
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "hosting": {
+    "public": "public",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+  }
 }

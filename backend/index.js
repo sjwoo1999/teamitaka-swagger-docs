@@ -9,6 +9,8 @@ const yaml = require('yaml');
 const fs = require('fs');
 const path = require('path');
 const admin = require('firebase-admin');
+const authRoutes = require('./routes/authRoutes.js');
+
 
 const app = express();
 const port = process.env.PORT || 8080;
