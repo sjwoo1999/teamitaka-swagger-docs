@@ -124,10 +124,10 @@ jobs:
           fi
 
       - name: Deploy Backend to Firebase Functions
-        run: firebase deploy --only functions --project teamitaka-swagger-practice --non-interactive
         env:
           # ✅ FIX HERE: 기존 ../../serviceAccountKey.json → ../serviceAccountKey.json
           GOOGLE_APPLICATION_CREDENTIALS: ../serviceAccountKey.json
+        run: firebase deploy --only functions --project teamitaka-swagger-practice --non-interactive
 
       - name: Clean up
         if: always()
