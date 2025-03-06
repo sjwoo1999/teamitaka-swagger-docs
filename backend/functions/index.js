@@ -31,15 +31,8 @@ app.get("/csrf-token", (req, res) => {
   res.json({ csrfToken: req.csrfToken() }); // 클라이언트에 CSRF 토큰 제공
 });
 
-// Firebase Functions에 Express 앱 연결 (타임아웃 120초 설정)
-exports.api = functions
-  .runWith({ timeoutSeconds: 120 }) // 타임아웃 120초, 필요 시 memory: "512MiB" 추가 가능
-  .onRequest(app);
-
-// 기존 helloWorld 함수 유지 (타임아웃 120초 설정)
-exports.helloWorld = functions
-  .runWith({ timeoutSeconds: 120 }) // 타임아웃 120초
-  .onRequest((request, response) => {
-    logger.info("Hello logs!", { structuredData: true }); // 구조화된 로그 기록
-    response.send("Hello from Firebase!");
-  });
+exports.api = functions.onRequest({ timeoutSeconds: 120, memory: "512MiB" }, app);
+exports.helloWorld = functions.onRequest({ timeoutSeconds: 120 }, (req, res) => {
+  logger.info("Hello logs!", { structuredData: true });
+  res.send("Hello from Firebase!");
+});
