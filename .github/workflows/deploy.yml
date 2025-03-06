@@ -113,7 +113,7 @@ jobs:
           fi
 
       - name: Deploy Backend to Firebase Functions
-        run: firebase deploy --only functions --timeout 120s --project teamitaka-swagger-practice --non-interactive
+        run: firebase deploy --only functions --project teamitaka-swagger-practice --non-interactive
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ./serviceAccountKey.json
 
