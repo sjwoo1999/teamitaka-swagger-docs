@@ -18,8 +18,10 @@
     "cors": "^2.8.5",
     "csurf": "^1.10.0",
     "express": "^4.21.2",
-    "firebase-admin": "^12.6.0",
-    "firebase-functions": "^6.3.2"
+    "firebase-admin": "^12.7.0",
+    "firebase-functions": "^6.3.2",
+    "swagger-ui-express": "^5.0.1",
+    "yaml": "^2.7.0"
   },
   "devDependencies": {
     "eslint": "^8.15.0",
