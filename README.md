@@ -195,5 +195,36 @@ echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | base64 -d > ../backend/
     <p>
         특히, 2025년 3월 5일 작업에서 올바르지 않은 서비스 계정 키 사용으로 인해 배포 오류가 발생했으나, 올바른 서비스 계정 키를 생성하고 Base64로 인코딩하여 GitHub Secrets에 저장함으로써 문제를 해결했습니다. 이 과정을 통해 배포 안정성과 보안이 더욱 강화되었습니다. 향후 작업으로는 Node.js 버전 유지와 배포 후 발생할 수 있는 버그 해결이 계획되어 있습니다.
     </p>
+<h2>작업 로그 (2025년 3월 6일)</h2>
+<p>2025년 3월 6일은 프로젝트 배포가 완료된 중요한 날입니다. 아래는 당일 작업의 상세 내역입니다:</p>
+<ul>
+    <li><strong>Firebase 설정 완료</strong>: Firebase Hosting과 Functions 설정을 최종 점검하여 배포 준비를 마무리했습니다.</li>
+    <li><strong>프로덕션 환경 설정</strong>: 배포 환경을 개발 환경에서 프로덕션 환경으로 전환했습니다.</li>
+    <li><strong>오류 해결</strong>:
+        <ul>
+            <li>ESLint에서 발생한 코드 품질 관련 오류를 수정했습니다.</li>
+            <li>서비스 계정 키 설정 문제로 인해 발생한 인증 오류를 해결했습니다.</li>
+        </ul>
+    </li>
+    <li><strong>CI/CD 개선</strong>: 배포 파이프라인을 최적화하기 위해 <code>deploy.yml</code> 파일을 여러 차례 업데이트했습니다.</li>
+    <li><strong>프론트엔드 배포</strong>: Firebase Hosting을 통해 프론트엔드 배포를 성공적으로 완료했습니다.</li>
+    <li><strong>서비스 계정 오류 발생 및 해결</strong>:
+        <ul>
+            <li><strong>오류 발생</strong>: 초기 배포 시 잘못된 서비스 계정 키를 사용해 인증 실패 오류(<code>SyntaxError: Unexpected token t in JSON at position 4</code>)가 발생했습니다.</li>
+            <li><strong>해결 과정</strong>:
+                <ol>
+                    <li>Firebase 콘솔에서 새로운 서비스 계정 키(<code>serviceAccountKey.json</code>)를 생성했습니다.</li>
+                    <li>생성된 키를 Base64로 인코딩하여 GitHub Secrets에 <code>FIREBASE_SERVICE_ACCOUNT_KEY_B64</code>로 저장했습니다.</li>
+                    <li><code>deploy.yml</code>에 디코딩 로직을 추가하여 올바른 키를 적용했습니다:
+                        <pre><code class="language-bash">
+echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | base64 -d > ../backend/serviceAccountKey.json
+                        </code></pre>
+                    </li>
+                </ol>
+            </li>
+        </ul>
+    </li>
+    <li><strong>배포 완료</strong>: 백엔드와 프론트엔드 배포를 최종적으로 완료했으며, 디버그 로그를 제거하여 깔끔한 출력을 보장했습니다.</li>
+</ul>
 </body>
 </html>
