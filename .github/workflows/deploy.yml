@@ -98,14 +98,15 @@ jobs:
             exit 1
           fi
           # Decode the Base64-encoded Service Account JSON
-          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | base64 -d > serviceAccountKey.json
+          # ======= 수정 포인트: ../../serviceAccountKey.json (프로젝트 루트) =======
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | base64 -d > ../../serviceAccountKey.json
           # Check if the file exists and is not empty
-          if [ ! -s serviceAccountKey.json ]; then
+          if [ ! -s ../../serviceAccountKey.json ]; then
             echo "File is empty or does not exist."
             exit 1
           fi
           # Validate JSON without printing sensitive data
-          if jq -e . serviceAccountKey.json > /dev/null; then
+          if jq -e . ../../serviceAccountKey.json > /dev/null; then
             echo "JSON is valid."
           else
             echo "Invalid JSON."
@@ -113,10 +114,11 @@ jobs:
           fi
 
       - name: Deploy Backend to Firebase Functions
+        # ======= 수정 포인트: GOOGLE_APPLICATION_CREDENTIALS가 ../../serviceAccountKey.json =======
         run: firebase deploy --only functions --project teamitaka-swagger-practice --non-interactive
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: ./serviceAccountKey.json
+          GOOGLE_APPLICATION_CREDENTIALS: ../../serviceAccountKey.json
 
       - name: Clean up
         if: always()
-        run: rm -f ./serviceAccountKey.json
+        run: rm -f ../../serviceAccountKey.json
