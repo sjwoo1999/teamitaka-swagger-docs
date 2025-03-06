@@ -108,7 +108,9 @@ app.get("/protected", authenticateJWT, (req, res) => {
 });
 
 //-------------------------------------
+
 // (14) Firebase Functions 내보내기 (v2)
+
 //-------------------------------------
 exports.api = onRequest({ timeoutSeconds: 120 }, app);
 
