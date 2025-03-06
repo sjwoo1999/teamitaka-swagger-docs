@@ -1,11 +1,19 @@
+// functions/config/firebase.js
 const admin = require('firebase-admin');
+const path = require('path');
 
-// GOOGLE_APPLICATION_CREDENTIALS 환경 변수에서 파일 경로 읽기
-const serviceAccountPath = process.env.GOOGLE_APPLICATION_CREDENTIALS || '../../serviceAccountKey.json';
-const serviceAccount = require(serviceAccountPath);
+// serviceAccountKey.json을 직접 로드해 인증 (개발 환경)
+// 만약 프로덕션에서 Application Default Credentials를 쓰고 싶다면, 조건 분기도 가능
+const serviceAccount = require(path.join(__dirname, '../../serviceAccountKey.json'));
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    // databaseURL, etc. 필요한 옵션 있으면 넣으세요
+  });
+  console.log("Firebase Admin: Default app initialized");
+} else {
+  console.log("Firebase Admin: Using existing default app");
+}
 
-module.exports = admin.auth();
+module.exports = admin;

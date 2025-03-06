@@ -1,3 +1,4 @@
+// functions/index.js
 const functions = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
 const express = require("express");
@@ -8,14 +9,14 @@ const swaggerUi = require("swagger-ui-express");
 const yaml = require("yaml");
 const fs = require("fs");
 const path = require("path");
-const admin = require("firebase-admin");
+
+// [중요] 중복 초기화 제거: admin = require("firebase-admin") 대신,
+// 이미 config/firebase.js에서 초기화된 admin을 가져다 씀.
+const admin = require("./config/firebase");
+
+// 라우팅 관련 코드
 const authRoutes = require("./routes/authRoutes.js");
 const authenticateJWT = require("./middleware/authenticateFirebase.js");
-
-// Firebase Admin SDK 초기화
-admin.initializeApp({
-  credential: admin.credential.applicationDefault(),
-});
 
 // Express 앱 초기화
 const app = express();
@@ -29,10 +30,12 @@ const swaggerFile = fs.readFileSync(path.join(__dirname, "swagger.yaml"), "utf8"
 const swaggerDocument = yaml.parse(swaggerFile);
 
 // 미들웨어 설정
-app.use(cors({
-  origin: CLIENT_URL,
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: CLIENT_URL,
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 app.use(express.json());
 app.use(csrf({ cookie: { httpOnly: true, secure: true, sameSite: "strict" } }));
@@ -43,6 +46,7 @@ app.get("/csrf-token", (req, res) => {
 });
 
 // 로그인 엔드포인트 (Firebase Auth 기반)
+// 여기서도 admin은 이미 config/firebase.js에서 초기화된 객체를 사용
 app.post("/auth/login", async (req, res) => {
   const { idToken } = req.body;
   try {
@@ -53,7 +57,7 @@ app.post("/auth/login", async (req, res) => {
   }
 });
 
-// 보호된 Swagger 문서 제공
+// Swagger 문서 보호
 app.use("/api-docs", authenticateJWT, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.get("/api-docs/swagger.json", authenticateJWT, (req, res) => {
   res.set("Content-Type", "application/json");
@@ -62,6 +66,8 @@ app.get("/api-docs/swagger.json", authenticateJWT, (req, res) => {
 
 // 라우트 설정
 app.use("/auth", authRoutes);
+
+// 테스트 라우트
 app.get("/protected", authenticateJWT, (req, res) => {
   res.send("This is a protected route");
 });
