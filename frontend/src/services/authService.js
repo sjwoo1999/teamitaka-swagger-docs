@@ -12,10 +12,10 @@ export const getCsrfToken = async () => {
     }
 };
 
-export const login = async (username, password, csrfToken) => {
+export const login = async (email, password, csrfToken) => {
     const response = await axios.post(
         `${API_URL}/auth/login`,
-        { username, password },
+        { email, password },
         {
             headers: { 'X-CSRF-Token': csrfToken },
             withCredentials: true,

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getCsrfToken, /*login*/ } from '../services/authService';
+import { getCsrfToken } from '../services/authService';
 import { auth } from '../config/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import './MainPage.css';
@@ -8,28 +8,50 @@ import './MainPage.css';
 function MainPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [/*csrfToken*/, setCsrfToken] = useState('');
+    const [csrfToken, setCsrfToken] = useState('');
     const [message, setMessage] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
+    // 환경 변수에서 API URL 가져오기
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+
     useEffect(() => {
+        // CSRF 토큰 초기화
         getCsrfToken()
             .then(token => setCsrfToken(token))
-            .catch(() => setMessage('CSRF 토큰을 가져오지 못했습니다.'));
+            .catch(() => setMessage('CSRF 토큰을 가져오는 데 실패했습니다.'));
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setMessage(''); // 메시지 초기화
         try {
+            // Firebase 인증
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const idToken = await userCredential.user.getIdToken();
-            // const data = await login(email, password, csrfToken); // 백엔드와 동기화
-            localStorage.setItem('token', idToken);
+
+            // 백엔드 로그인 요청 (CSRF 토큰 포함)
+            const response = await fetch(`${API_URL}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrfToken,
+                },
+                body: JSON.stringify({ email, password }),
+                credentials: 'include', // 쿠키 포함
+            });
+
+            if (!response.ok) {
+                throw new Error('백엔드 인증에 실패했습니다.');
+            }
+
+            const data = await response.json();
+            localStorage.setItem('token', data.token || idToken); // 백엔드 JWT 또는 Firebase ID 토큰 저장
             setMessage('로그인 성공! Swagger 문서로 이동합니다.');
             setTimeout(() => navigate('/api-docs'), 1000);
         } catch (error) {
-            setMessage(error.message || '로그인 실패');
+            setMessage(error.message || '로그인에 실패했습니다. 다시 시도해주세요.');
         }
     };
 
@@ -70,7 +92,7 @@ function MainPage() {
                         </div>
                     </div>
                     <button type="submit">로그인</button>
-                    <p className="error-message">{message}</p>
+                    {message && <p className="error-message">{message}</p>}
                 </form>
             </div>
         </div>
