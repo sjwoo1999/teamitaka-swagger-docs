@@ -6,8 +6,8 @@ const csrf = require("csurf");
 const cookieParser = require("cookie-parser");
 
 // 기존 middleware와 routes 파일이 src에 있다고 가정
-const authRoutes = require("../src/routes/auth"); // 경로는 실제 구조에 맞게 조정
-const authenticateJWT = require("../src/middleware/authenticateFirebase"); // 경로는 실제 구조에 맞게 조정
+const authRoutes = require("../src/routes/authRoutes.js"); // 경로는 실제 구조에 맞게 조정
+const authenticateJWT = require("../src/middleware/authenticateFirebase.js"); // 경로는 실제 구조에 맞게 조정
 
 // Express 앱 초기화
 const app = express();
