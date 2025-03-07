@@ -24,6 +24,8 @@ jobs:
         run: npm ci
 
       - name: Build Frontend
+        env:
+            REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
         run: npm run build
 
       - name: Install Firebase CLI
