@@ -1,0 +1,9 @@
+schema:
+  type: graphql
+  files:
+    - schema.graphql
+connectors:
+  - name: myConnector
+    service: myService
+    files:
+      - connector.js
