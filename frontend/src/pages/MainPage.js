@@ -15,9 +15,20 @@ function MainPage() {
 
     // 환경 변수에서 API URL 가져오기
     const API_URL = process.env.REACT_APP_API_URL;
-    fetch(`${API_URL}/csrf-token`, { method: 'GET' })
-        .then(response => response.json())
-        .catch(error => console.error('API 요청 실패:', error));
+
+    // CSRF 토큰 가져오기
+    useEffect(() => {
+        const fetchCsrfToken = async () => {
+            try {
+                const response = await fetch(`${API_URL}/csrf-token`, { method: 'GET' });
+                const data = await response.json();
+                setCsrfToken(data.csrfToken);
+            } catch (error) {
+                console.error('CSRF 토큰 요청 실패:', error);
+            }
+        };
+        fetchCsrfToken();
+    }, [API_URL]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -25,12 +36,9 @@ function MainPage() {
         try {
             // Firebase 인증
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            const idToken = await userCredential.user.getIdToken();
-            fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${REACT_APP_FIREBASE_API_KEY}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ idToken })
-            });
+            const user = userCredential.user;
+            const idToken = await user.getIdToken();
+            console.log('Firebase 로그인 성공:', { uid: user.uid, email: user.email });
 
             // 백엔드 로그인 요청 (CSRF 토큰 포함)
             const response = await fetch(`${API_URL}/auth/login`, {
@@ -39,12 +47,12 @@ function MainPage() {
                     'Content-Type': 'application/json',
                     'X-CSRF-Token': csrfToken,
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ idToken }),
                 credentials: 'include', // 쿠키 포함
             });
 
             if (!response.ok) {
-                throw new Error('백엔드 인증에 실패했습니다.');
+                throw new Error(`백엔드 인증 실패: ${response.status} ${response.statusText}`);
             }
 
             const data = await response.json();
@@ -53,6 +61,7 @@ function MainPage() {
             setTimeout(() => navigate('/api-docs'), 1000);
         } catch (error) {
             setMessage(error.message || '로그인에 실패했습니다. 다시 시도해주세요.');
+            console.error('로그인 에러:', error);
         }
     };
 
@@ -83,6 +92,7 @@ function MainPage() {
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="비밀번호를 입력하세요"
                                 required
+                                autoComplete="current-password"
                             />
                             <span
                                 className="password-toggle"
