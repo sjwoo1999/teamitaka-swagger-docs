@@ -3,13 +3,11 @@
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
-  "functions": [
-    {
-      "source": "functions",
-      "codebase": "default",
-      "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
-    }
-  ],
+  "functions": {
+    "source": "functions",
+    "codebase": "default",
+    "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
+  },
   "emulators": {
     "auth": {
       "port": 9099
@@ -24,7 +22,7 @@
       "port": 9000
     },
     "hosting": {
-      "port": 5000
+      "port": 5002
     },
     "pubsub": {
       "port": 8085
