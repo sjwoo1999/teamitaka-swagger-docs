@@ -105,16 +105,19 @@ jobs:
           SECRET_LEN=$(echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | wc -c)
           echo "DEBUG(functions): FIREBASE_SERVICE_ACCOUNT_KEY_B64 length: ${SECRET_LEN}"
 
-          # 2) Base64 디코딩 -> ./serviceAccountKey.json (functions 폴더 내부)
-          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | base64 -d > ./serviceAccountKey.json
+          # 2) Base64 디코딩 -> ./config/serviceAccountKey.json
+          #    (여기서 working-directory는 ./functions)
+          #    => 실제 경로: functions/config/serviceAccountKey.json
+          mkdir -p ./config
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | base64 -d > ./config/serviceAccountKey.json
 
           # 3) 파일 검증
-          if [ ! -s ./serviceAccountKey.json ]; then
+          if [ ! -s ./config/serviceAccountKey.json ]; then
             echo "File is empty or does not exist."
             exit 1
           fi
 
-          if jq -e . ./serviceAccountKey.json > /dev/null; then
+          if jq -e . ./config/serviceAccountKey.json > /dev/null; then
             echo "JSON is valid."
           else
             echo "Invalid JSON."
@@ -123,10 +126,10 @@ jobs:
 
       - name: Deploy Backend to Firebase Functions
         env:
-          # 파일이 functions/ 경로에 있으므로
-          GOOGLE_APPLICATION_CREDENTIALS: ./serviceAccountKey.json
+          # => functions/config/serviceAccountKey.json
+          GOOGLE_APPLICATION_CREDENTIALS: ./config/serviceAccountKey.json
         run: firebase deploy --only functions --project teamitaka-swagger-practice --non-interactive
 
       - name: Clean up
         if: always()
-        run: rm -f ./serviceAccountKey.json
+        run: rm -f ./config/serviceAccountKey.json
