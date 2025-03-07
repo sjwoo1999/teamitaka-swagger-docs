@@ -83,47 +83,28 @@ jobs:
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
-      - name: Install jq (for JSON validation)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y jq
-
       - name: Set up Firebase Service Account
         run: |
-          if [ -z "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" ]; then
-            echo "Secret FIREBASE_SERVICE_ACCOUNT_KEY_B64 is not set."
-            exit 1
-          fi
-          SECRET_LEN=$(echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | wc -c)
-          echo "DEBUG(functions): FIREBASE_SERVICE_ACCOUNT_KEY_B64 length: ${SECRET_LEN}"
-          mkdir -p ./config
-          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | base64 -d > ./config/serviceAccountKey.json
-          if [ ! -s ./config/serviceAccountKey.json ]; then
-            echo "File is empty or does not exist."
-            exit 1
-          fi
-          if jq -e . ./config/serviceAccountKey.json > /dev/null; then
-            echo "JSON is valid."
-          else
-            echo "Invalid JSON."
-            exit 1
-          fi
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | base64 -d > ./serviceAccountKey.json
+
+      - name: Login to Firebase using Service Account
+        run: |
+          FIREBASE_TOKEN=$(firebase login:ci --service-account=./serviceAccountKey.json)
+          echo "FIREBASE_TOKEN=$FIREBASE_TOKEN" >> $GITHUB_ENV
 
       - name: Set Firebase Environment Variables
         env:
           CLIENT_URL: ${{ secrets.CLIENT_URL }}
         run: |
           if [ -n "${CLIENT_URL}" ]; then
-            firebase functions:config:set client.url="$CLIENT_URL" --project teamitaka-swagger-practice
+            firebase functions:config:set client.url="$CLIENT_URL" --token $FIREBASE_TOKEN
           else
-            echo "CLIENT_URL is not set in Secrets, using default."
+            echo "CLIENT_URL is not set, skipping."
           fi
 
       - name: Deploy Backend to Firebase Functions
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ./config/serviceAccountKey.json
-        run: firebase deploy --only functions --project teamitaka-swagger-practice --non-interactive
+        run: firebase deploy --only functions --non-interactive --token $FIREBASE_TOKEN
 
       - name: Clean up
         if: always()
-        run: rm -f ./config/serviceAccountKey.json
+        run: rm -f ./serviceAccountKey.json
