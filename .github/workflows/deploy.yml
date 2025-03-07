@@ -25,7 +25,7 @@ jobs:
 
       - name: Build Frontend
         env:
-            REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
+          REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
         run: npm run build
 
       - name: Install Firebase CLI
@@ -38,22 +38,15 @@ jobs:
 
       - name: Set up Firebase Service Account
         run: |
-          # 1) GitHub Secrets에서 가져온 Base64-encoded 값이 있는지 확인
           if [ -z "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" ]; then
             echo "Secret FIREBASE_SERVICE_ACCOUNT_KEY_B64 is not set."
             exit 1
           fi
-
-          # 2) Base64 디코딩 -> serviceAccountKey.json 생성
           echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | base64 -d > serviceAccountKey.json
-
-          # 3) 파일이 정상 생성되었는지 검증
           if [ ! -s serviceAccountKey.json ]; then
             echo "File is empty or does not exist."
             exit 1
           fi
-
-          # 4) JSON 검증 (민감정보를 print하지 않도록 -e 옵션)
           if jq -e . serviceAccountKey.json > /dev/null; then
             echo "JSON is valid."
           else
@@ -97,28 +90,18 @@ jobs:
 
       - name: Set up Firebase Service Account
         run: |
-          # 1) GitHub Secrets에서 가져온 Base64-encoded 값이 있는지 확인
           if [ -z "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" ]; then
             echo "Secret FIREBASE_SERVICE_ACCOUNT_KEY_B64 is not set."
             exit 1
           fi
-
-          # (선택) Secret 길이 디버그
           SECRET_LEN=$(echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | wc -c)
           echo "DEBUG(functions): FIREBASE_SERVICE_ACCOUNT_KEY_B64 length: ${SECRET_LEN}"
-
-          # 2) Base64 디코딩 -> ./config/serviceAccountKey.json
-          #    (여기서 working-directory는 ./functions)
-          #    => 실제 경로: functions/config/serviceAccountKey.json
           mkdir -p ./config
           echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | base64 -d > ./config/serviceAccountKey.json
-
-          # 3) 파일 검증
           if [ ! -s ./config/serviceAccountKey.json ]; then
             echo "File is empty or does not exist."
             exit 1
           fi
-
           if jq -e . ./config/serviceAccountKey.json > /dev/null; then
             echo "JSON is valid."
           else
@@ -126,9 +109,18 @@ jobs:
             exit 1
           fi
 
+      - name: Set Firebase Environment Variables
+        env:
+          CLIENT_URL: ${{ secrets.CLIENT_URL }}
+        run: |
+          if [ -n "${CLIENT_URL}" ]; then
+            firebase functions:config:set client.url="$CLIENT_URL" --project teamitaka-swagger-practice
+          else
+            echo "CLIENT_URL is not set in Secrets, using default."
+          fi
+
       - name: Deploy Backend to Firebase Functions
         env:
-          # => functions/config/serviceAccountKey.json
           GOOGLE_APPLICATION_CREDENTIALS: ./config/serviceAccountKey.json
         run: firebase deploy --only functions --project teamitaka-swagger-practice --non-interactive
 

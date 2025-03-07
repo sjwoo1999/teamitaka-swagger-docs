@@ -1,5 +1,5 @@
 // functions/index.js
-
+require('dotenv').config();
 const { onRequest } = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
 const functions = require('firebase-functions');
@@ -38,14 +38,13 @@ app.get("/csrf-token", (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
 });
 
-app.post("/auth/login", async (req, res) => {
+app.post('/auth/login', (req, res) => {
   const { idToken } = req.body;
-  try {
-    const decoded = await admin.auth().verifyIdToken(idToken);
-    res.json({ message: "로그인 성공", token: idToken });
-  } catch (error) {
-    res.status(401).json({ message: "로그인 실패", error: error.message });
+  const csrfToken = req.headers['x-csrf-token'];
+  if (!csrfToken || csrfToken !== req.csrfToken()) {
+      return res.status(403).json({ message: 'CSRF 토큰 불일치' });
   }
+  // 나머지 로직
 });
 
 app.use("/api-docs", authenticateJWT, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
