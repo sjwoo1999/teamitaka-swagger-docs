@@ -2,6 +2,7 @@
 
 const { onRequest } = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
+const functions = require('firebase-functions');
 
 const express = require("express");
 const cors = require("cors");
@@ -62,7 +63,7 @@ app.get("/protected", authenticateJWT, (req, res) => {
 
 exports.api = onRequest({ region: 'us-central1', timeoutSeconds: 120 }, app);
 
-exports.helloWorld = onRequest({ region: 'us-central1', timeoutSeconds: 120 }, (req, res) => {
+exports.helloworld = functions.https.onRequest({region: 'us-central1', timeoutSeconds: 120}, (req, res) => {
   logger.info("Hello logs!", { structuredData: true });
   res.send("Hello from Firebase!");
-});
+})
