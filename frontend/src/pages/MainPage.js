@@ -26,7 +26,7 @@ function MainPage() {
             // Firebase 인증
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const idToken = await userCredential.user.getIdToken();
-            fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${API_KEY}`, {
+            fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${REACT_APP_FIREBASE_API_KEY}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ idToken })
