@@ -14,14 +14,10 @@ function MainPage() {
     const navigate = useNavigate();
 
     // 환경 변수에서 API URL 가져오기
-    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
-
-    useEffect(() => {
-        // CSRF 토큰 초기화
-        getCsrfToken()
-            .then(token => setCsrfToken(token))
-            .catch(() => setMessage('CSRF 토큰을 가져오는 데 실패했습니다.'));
-    }, []);
+    const API_URL = process.env.REACT_APP_API_URL;
+    fetch(`${API_URL}/csrf-token`, { method: 'GET' })
+        .then(response => response.json())
+        .catch(error => console.error('API 요청 실패:', error));
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -30,6 +26,11 @@ function MainPage() {
             // Firebase 인증
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const idToken = await userCredential.user.getIdToken();
+            fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${API_KEY}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ idToken })
+            });
 
             // 백엔드 로그인 요청 (CSRF 토큰 포함)
             const response = await fetch(`${API_URL}/auth/login`, {
