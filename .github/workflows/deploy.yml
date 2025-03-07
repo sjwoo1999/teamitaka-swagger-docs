@@ -54,11 +54,6 @@ jobs:
             exit 1
           fi
 
-      - name: Login to Firebase using Service Account
-        run: |
-          firebase login:ci --interactive=false --project=teamitaka-swagger-practice
-          echo "Firebase CLI logged in with service account."
-
       - name: Deploy Frontend to Firebase Hosting
         run: firebase deploy --only hosting:production --project teamitaka-swagger-practice --non-interactive
         env:
@@ -113,11 +108,6 @@ jobs:
             echo "Invalid JSON."
             exit 1
           fi
-
-      - name: Login to Firebase using Service Account
-        run: |
-          firebase login:ci --interactive=false --project=teamitaka-swagger-practice
-          echo "Firebase CLI logged in with service account."
 
       - name: Set Firebase Environment Variables
         env:
