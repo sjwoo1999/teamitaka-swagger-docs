@@ -27,6 +27,7 @@ function MainPage() {
       });
       if (!response.ok) throw new Error('백엔드 인증 실패');
       const data = await response.json();
+      setMessage(`로그인 성공! 환영합니다, ${data.user}`);
 
       // 토큰 저장
       localStorage.setItem('token', idToken);
