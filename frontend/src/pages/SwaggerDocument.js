@@ -23,7 +23,7 @@ const SwaggerDocument = () => {
             }
         };
         checkApiAvailability();
-    }, []);
+    }, [token]);  // 의존성 배열에 'token' 추가
 
     if (error) {
         return (
