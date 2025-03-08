@@ -18,20 +18,23 @@ function MainPage() {
       // Firebase 인증
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const idToken = await userCredential.user.getIdToken();
+      console.log('발급된 idToken:', idToken); // 디버깅용
 
-      // 백엔드 인증 (CSRF 토큰 제거)
+      // 백엔드 인증
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idToken }),
       });
-      if (!response.ok) throw new Error('백엔드 인증 실패');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.details || errorData.error || '백엔드 인증 실패');
+      }
       const data = await response.json();
       setMessage(`로그인 성공! 환영합니다, ${data.user}`);
 
       // 토큰 저장
       localStorage.setItem('token', idToken);
-      setMessage('로그인 성공! Swagger 문서로 이동합니다.');
       setTimeout(() => navigate('/api-docs'), 1000);
     } catch (error) {
       setMessage(error.message || '로그인에 실패했습니다. 다시 시도해주세요.');
