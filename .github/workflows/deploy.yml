@@ -87,23 +87,21 @@ jobs:
         run: |
           echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | base64 -d > ./serviceAccountKey.json
 
-      - name: Login to Firebase using Service Account
-        run: |
-          FIREBASE_TOKEN=$(firebase login:ci --service-account=./serviceAccountKey.json)
-          echo "FIREBASE_TOKEN=$FIREBASE_TOKEN" >> $GITHUB_ENV
-
       - name: Set Firebase Environment Variables
         env:
           CLIENT_URL: ${{ secrets.CLIENT_URL }}
+          GOOGLE_APPLICATION_CREDENTIALS: ./serviceAccountKey.json
         run: |
           if [ -n "${CLIENT_URL}" ]; then
-            firebase functions:config:set client.url="$CLIENT_URL" --token $FIREBASE_TOKEN
+            firebase functions:config:set client.url="$CLIENT_URL" --project teamitaka-swagger-practice
           else
             echo "CLIENT_URL is not set, skipping."
           fi
 
       - name: Deploy Backend to Firebase Functions
-        run: firebase deploy --only functions --non-interactive --token $FIREBASE_TOKEN
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ./serviceAccountKey.json
+        run: firebase deploy --only functions --non-interactive --project teamitaka-swagger-practice
 
       - name: Clean up
         if: always()
