@@ -1,4 +1,3 @@
-// functions/index.js
 require('dotenv').config();
 const { onRequest } = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
@@ -28,8 +27,11 @@ const swaggerDocument = yaml.parse(swaggerFile);
 app.use(cors({ origin: CLIENT_URL, credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
-app.use(csrf({ cookie: { httpOnly: true, secure: true, sameSite: "strict" } }));
 
+// CSRF 미들웨어 정의
+const csrfProtection = csrf({ cookie: { httpOnly: true, secure: true, sameSite: "none" } });
+
+// CSRF 보호가 필요 없는 경로
 app.get("/", (req, res) => {
   res.status(200).send("OK");
 });
@@ -40,12 +42,17 @@ app.get("/csrf-token", (req, res) => {
 
 app.post('/auth/login', (req, res) => {
   const { idToken } = req.body;
-  const csrfToken = req.headers['x-csrf-token'];
-  if (!csrfToken || csrfToken !== req.csrfToken()) {
-      return res.status(403).json({ message: 'CSRF 토큰 불일치' });
-  }
-  // 나머지 로직
+  admin.auth().verifyIdToken(idToken)
+    .then((decodedToken) => {
+      res.status(200).json({ message: '로그인 성공', uid: decodedToken.uid });
+    })
+    .catch((error) => {
+      res.status(401).json({ message: '로그인 실패', error: error.message });
+    });
 });
+
+// CSRF 보호 적용
+app.use(csrfProtection);
 
 app.use("/api-docs", authenticateJWT, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -65,4 +72,4 @@ exports.api = onRequest({ region: 'us-central1', timeoutSeconds: 120 }, app);
 exports.helloworld = functions.https.onRequest({region: 'us-central1', timeoutSeconds: 120}, (req, res) => {
   logger.info("Hello logs!", { structuredData: true });
   res.send("Hello from Firebase!");
-})
+});

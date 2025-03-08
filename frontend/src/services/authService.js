@@ -12,15 +12,12 @@ export const getCsrfToken = async () => {
     }
 };
 
-export const login = async (idToken, csrfToken) => {
+export const login = async (idToken) => {
     try {
         const response = await axios.post(
             `${API_URL}/auth/login`,
-            { idToken }, // 백엔드가 idToken을 기대하도록 수정
-            {
-                headers: { 'X-CSRF-Token': csrfToken },
-                withCredentials: true,
-            }
+            { idToken },
+            { withCredentials: true }
         );
         return response.data;
     } catch (error) {
