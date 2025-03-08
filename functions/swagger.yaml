@@ -4,8 +4,8 @@ info:
   version: 1.0.0
   description: Teamitaka 백엔드 API 문서
 servers:
-  - url: http://localhost:3000
-    description: 로컬 개발 서버
+  - url: https://api-jcewvyygoq-uc.a.run.app
+    description: 프로덕션 서버
 paths:
   # 관리자 관련 엔드포인트
   /admin/login:
