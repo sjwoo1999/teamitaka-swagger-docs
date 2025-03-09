@@ -1,0 +1,78 @@
+/* frontend/src/pages/SwaggerDocument.css */
+
+/* Google Fonts에서 Noto Sans KR 가져오기 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+/* Swagger UI 전체에 기본 폰트 및 텍스트 스타일 적용 */
+.swagger-ui {
+  font-family: 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  font-size: 16px; /* 기본 글자 크기 */
+  line-height: 1.5; /* 줄 높이로 가독성 확보 */
+  letter-spacing: 0.5px; /* 글자 간격 조정 */
+  color: #333; /* 텍스트 색상 */
+}
+
+/* API 정보 섹션 (제목 등) 스타일 */
+.swagger-ui .info .title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.swagger-ui .info .description {
+  font-size: 14px;
+  color: #666;
+}
+
+/* 엔드포인트 요약 섹션 */
+.swagger-ui .opblock-summary {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.swagger-ui .opblock-summary-path {
+  font-weight: 500;
+  color: #2a2a2a;
+}
+
+/* 엔드포인트 설명 섹션 */
+.swagger-ui .opblock-description-wrapper {
+  font-size: 14px;
+  color: #444;
+  padding: 10px;
+}
+
+/* 엔드포인트 블록 스타일 */
+.swagger-ui .opblock {
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+.swagger-ui .opblock-body {
+  padding: 15px;
+  background-color: #f9f9f9; /* 배경색으로 깔끔함 강조 */
+}
+
+/* 버튼 스타일 */
+.swagger-ui .btn {
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+/* 응답 상태 및 설명 */
+.swagger-ui .response-col_status {
+  font-weight: 500;
+  color: #2a2a2a;
+}
+
+.swagger-ui .response-col_description {
+  font-size: 14px;
+  color: #555;
+}
+
+/* 코드 블록 스타일 */
+.swagger-ui .highlight-code {
+  font-family: 'Noto Sans KR', monospace;
+  font-size: 13px;
+}
