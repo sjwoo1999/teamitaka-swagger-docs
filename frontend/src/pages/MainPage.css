@@ -4,7 +4,6 @@
 /* 로그인 페이지 배경 */
 .login-page {
     background: linear-gradient(135deg, #1a1a2e, #16213e, #0f172a);
-    background-image: url('path/to/subtle-texture.png'); /* 실제 텍스처 경로 필요 */
     background-blend-mode: overlay;
     min-height: 100vh;
     display: flex;
