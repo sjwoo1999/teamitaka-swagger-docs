@@ -23,7 +23,6 @@ function MainPage() {
       // Firebase 인증
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const idToken = await userCredential.user.getIdToken();
-      console.log('Firebase 인증 성공, idToken:', idToken);
 
       // 백엔드 요청
       const response = await fetch(`${API_URL}/api/auth/login`, {
