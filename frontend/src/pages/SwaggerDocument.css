@@ -9,13 +9,12 @@
   font-size: 16px;
   line-height: 1.6;
   letter-spacing: 0.5px;
-  color: #2c3e50;
+  color: #1a1a1a; /* 더 진한 텍스트 색상으로 대비 강화 */
   font-weight: 400;
   white-space: normal;
   word-break: normal;
   overflow-wrap: break-word;
-  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
-  background-blend-mode: overlay;
+  background: linear-gradient(135deg, #ffffff, #f0f4f8); /* 단순하고 밝은 배경 */
   min-height: 100vh;
   padding: 30px;
   animation: fadeIn 1s ease-in;
@@ -31,26 +30,26 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.8);
+  background: #ffffff; /* 흰색 배경으로 가독성 향상 */
   border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .swagger-ui .info .title {
   font-size: 36px;
   font-weight: 700;
   margin-bottom: 15px;
-  color: #34495e;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  color: #2c3e50; /* 제목 색상 유지 */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .swagger-ui .info .description {
   font-size: 16px;
-  color: #7f8c8d;
+  color: #4a4a4a; /* 설명 텍스트를 더 진하게 */
   white-space: normal;
   line-height: 1.8;
   padding: 10px;
-  background: rgba(255, 255, 255, 0.8);
+  background: #f9fbfd;
   border-radius: 6px;
 }
 
@@ -66,7 +65,7 @@
 }
 
 .swagger-ui .btn.authorize {
-  background: linear-gradient(90deg, #3498db, #2980b9);
+  background: linear-gradient(90deg, #2c3e50, #34495e); /* 통일된 어두운 톤 */
   color: #ffffff;
   padding: 10px 20px;
   border-radius: 6px;
@@ -75,7 +74,7 @@
 
 .swagger-ui .btn.authorize:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 10px rgba(52, 152, 219, 0.4);
+  box-shadow: 0 4px 10px rgba(44, 62, 80, 0.4);
 }
 
 /* 엔드포인트 요약 섹션 */
@@ -99,7 +98,7 @@
 }
 
 .swagger-ui .opblock-summary-method {
-  background: linear-gradient(90deg, #f1c40f, #f39c12);
+  background: linear-gradient(90deg, #e67e22, #d35400); /* 더 진한 오렌지 톤 */
   color: #ffffff;
   padding: 5px 12px;
   border-radius: 4px;
@@ -119,7 +118,7 @@
 /* 엔드포인트 설명 섹션 */
 .swagger-ui .opblock-description-wrapper {
   font-size: 14px;
-  color: #7f8c8d;
+  color: #4a4a4a; /* 설명 텍스트 대비 강화 */
   padding: 15px;
   white-space: normal;
   overflow-wrap: break-word;
@@ -154,7 +153,7 @@
   font-size: 14px;
   padding: 8px 16px;
   border-radius: 6px;
-  background: linear-gradient(90deg, #3498db, #2980b9);
+  background: linear-gradient(90deg, #2c3e50, #34495e); /* 버튼 색상 통일 */
   color: #ffffff;
   border: none;
   transition: all 0.3s ease;
@@ -162,7 +161,7 @@
 
 .swagger-ui .btn:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 10px rgba(52, 152, 219, 0.4);
+  box-shadow: 0 4px 10px rgba(44, 62, 80, 0.4);
 }
 
 /* 응답 상태 및 설명 */
@@ -173,7 +172,7 @@
 
 .swagger-ui .response-col_description {
   font-size: 14px;
-  color: #7f8c8d;
+  color: #4a4a4a; /* 응답 설명도 진한 색상으로 */
   white-space: normal;
   overflow-wrap: break-word;
 }
@@ -182,12 +181,12 @@
 .swagger-ui .highlight-code {
   font-family: 'Noto Sans KR', monospace;
   font-size: 13px;
-  background-color: #f4f7f9;
+  background-color: #ecf0f1;
   padding: 12px;
   border-radius: 4px;
   white-space: pre-wrap;
   word-break: break-word;
-  border-left: 4px solid #2980b9;
+  border-left: 4px solid #34495e; /* 강조선 색상 통일 */
 }
 
 /* 반응형 디자인 */
