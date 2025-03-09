@@ -27,7 +27,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 // CSRF 미들웨어 정의
-const csrfProtection = csrf({ cookie: { httpOnly: true, secure: true, sameSite: "none" } });
+const csrfProtection = csrf({ cookie: { httpOnly: true, secure: true, sameSite: "lax" } });
 
 // CSRF 보호가 필요 없는 경로
 app.get("/", (req, res) => {
