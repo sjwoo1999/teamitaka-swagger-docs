@@ -1,11 +1,12 @@
 const admin = require('../config/firebase');
 
 const login = async (req, res) => {
-  const { idToken } = req.body;
-
-  if (!idToken) {
-    return res.status(400).json({ message: 'idToken이 필요합니다.' });
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(400).json({ message: '유효한 인증 토큰이 필요합니다.' });
   }
+
+  const idToken = authHeader.split('Bearer ')[1];
 
   try {
     // Firebase Admin SDK로 idToken 검증

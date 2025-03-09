@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../config/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -9,88 +9,56 @@ function MainPage() {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [csrfToken, setCsrfToken] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
   const navigate = useNavigate();
 
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
-  // CSRF 토큰 가져오기
-  useEffect(() => {
-    const fetchCsrfToken = async () => {
-      try {
-        const response = await fetch(`${API_URL}/csrf-token`, { credentials: 'include' });
-        if (!response.ok) {
-          throw new Error(`CSRF 토큰 요청 실패: 상태 코드 ${response.status}`);
-        }
-        const contentType = response.headers.get('Content-Type');
-        if (!contentType || !contentType.includes('application/json')) {
-          throw new Error('CSRF 토큰 응답이 JSON 형식이 아닙니다.');
-        }
-        const data = await response.json();
-        setCsrfToken(data.csrfToken);
-        console.log('CSRF 토큰 획득 성공:', data.csrfToken); // 디버깅용
-      } catch (error) {
-        console.error('CSRF 토큰 가져오기 실패:', error);
-        setMessage(`CSRF 토큰을 가져오지 못했습니다: ${error.message}`);
-      }
-    };
-    fetchCsrfToken();
-  }, [API_URL]);
-
-  // 로그인 처리
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('로그인 시도 중...');
-
-    // CSRF 토큰 확인
-    if (!csrfToken) {
-      setMessage('CSRF 토큰이 없습니다. 페이지를 새로고침하세요.');
-      console.warn('CSRF 토큰 누락으로 요청 중단');
-      return;
-    }
+    setIsLoading(true); // 로딩 시작
 
     try {
       // Firebase 인증
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const idToken = await userCredential.user.getIdToken();
-      console.log('Firebase 인증 성공, idToken:', idToken); // 디버깅용
+      console.log('Firebase 인증 성공, idToken:', idToken);
 
       // 백엔드 요청
       const response = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken,
+          'Authorization': `Bearer ${idToken}`,
         },
-        body: JSON.stringify({ idToken }),
-        credentials: 'include',
+        body: JSON.stringify({}),
       });
 
-      const contentType = response.headers.get('Content-Type');
+      // 응답 상태 및 형식 확인
       if (!response.ok) {
-        let errorMessage = `서버 오류: ${response.status}`;
+        const contentType = response.headers.get('Content-Type');
+        let errorMessage = '백엔드 인증 실패';
         if (contentType && contentType.includes('application/json')) {
           const errorData = await response.json();
-          errorMessage = errorData.message || '백엔드 인증 실패';
+          errorMessage = errorData.message || errorMessage;
         } else {
           const errorText = await response.text();
-          errorMessage += ` - ${errorText.slice(0, 100)}...`;
+          errorMessage = `서버 오류: ${response.status} - ${errorText.slice(0, 100)}...`;
         }
         throw new Error(errorMessage);
-      }
-
-      if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('서버 응답이 JSON 형식이 아닙니다.');
       }
 
       const data = await response.json();
       setMessage(`로그인 성공! 환영합니다, ${data.uid}.`);
       localStorage.setItem('token', idToken);
-      console.log('로그인 성공, 사용자 UID:', data.uid); // 디버깅용
+      console.log('로그인 성공, 사용자 UID:', data.uid);
       setTimeout(() => navigate('/api-docs'), 1000);
     } catch (error) {
       setMessage(error.message || '로그인에 실패했습니다. 다시 시도해주세요.');
       console.error('로그인 처리 중 오류:', error);
+    } finally {
+      setIsLoading(false); // 로딩 종료
     }
   };
 
@@ -131,7 +99,9 @@ function MainPage() {
               </span>
             </div>
           </div>
-          <button type="submit">로그인</button>
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? '처리 중...' : '로그인'}
+          </button>
           {message && <p className="message">{message}</p>}
         </form>
       </div>

@@ -5,7 +5,6 @@ const functions = require('firebase-functions');
 
 const express = require("express");
 const cors = require("cors");
-const csrf = require("csurf");
 const cookieParser = require("cookie-parser");
 const yaml = require("yaml");
 const fs = require("fs");
@@ -26,23 +25,18 @@ app.use(cors({ origin: CLIENT_URL, credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
 
-// CSRF 미들웨어 정의
-const csrfProtection = csrf({ cookie: { httpOnly: true, secure: true, sameSite: "lax" } });
+// CSRF 보호 제거
+// const csrfProtection = csrf({ cookie: { httpOnly: true, secure: true, sameSite: "lax" } });
+// app.get("/csrf-token", (req, res) => { ... });
+// app.use(csrfProtection);
 
-// CSRF 보호가 필요 없는 경로
+// 기본 경로
 app.get("/", (req, res) => {
   res.status(200).send("OK");
 });
 
-app.get("/csrf-token", (req, res) => {
-  res.json({ csrfToken: req.csrfToken() });
-});
-
-// CSRF 보호 적용
-app.use(csrfProtection);
-
 // 라우트 설정
-app.use("/api/auth", authRoutes); // 경로 수정
+app.use("/api/auth", authRoutes);
 
 app.get("/api-docs/swagger.json", authenticateJWT, (req, res) => {
   res.set("Content-Type", "application/json");
@@ -55,7 +49,7 @@ app.get("/protected", authenticateJWT, (req, res) => {
 
 exports.api = onRequest({ region: 'us-central1', timeoutSeconds: 120 }, app);
 
-exports.helloworld = functions.https.onRequest({region: 'us-central1', timeoutSeconds: 120}, (req, res) => {
+exports.helloworld = functions.https.onRequest({ region: 'us-central1', timeoutSeconds: 120 }, (req, res) => {
   logger.info("Hello logs!", { structuredData: true });
   res.send("Hello from Firebase!");
 });

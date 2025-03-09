@@ -1,4 +1,3 @@
-// functions/middleware/authenticateFirebase.js
 const admin = require('../config/firebase');
 
 const authenticateFirebase = async (req, res, next) => {
