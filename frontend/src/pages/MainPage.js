@@ -14,15 +14,17 @@ function MainPage() {
 
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
-  // CSRF 토큰 가져오기
   useEffect(() => {
     const fetchCsrfToken = async () => {
       try {
         const response = await fetch(`${API_URL}/csrf-token`, { credentials: 'include' });
+        if (!response.ok) throw new Error('CSRF 토큰 요청 실패');
         const data = await response.json();
         setCsrfToken(data.csrfToken);
+        console.log('CSRF 토큰:', data.csrfToken); // 디버깅용
       } catch (error) {
         console.error('CSRF 토큰 가져오기 실패:', error);
+        setMessage('CSRF 토큰을 가져오지 못했습니다.');
       }
     };
     fetchCsrfToken();
@@ -36,6 +38,7 @@ function MainPage() {
       // Firebase 인증
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const idToken = await userCredential.user.getIdToken();
+      console.log('Firebase idToken:', idToken); // 디버깅용
 
       // 백엔드 요청
       const response = await fetch(`${API_URL}/api/auth/login`, {
@@ -48,8 +51,8 @@ function MainPage() {
         credentials: 'include',
       });
 
+      const contentType = response.headers.get('Content-Type');
       if (!response.ok) {
-        const contentType = response.headers.get('Content-Type');
         if (contentType && contentType.includes('application/json')) {
           const errorData = await response.json();
           throw new Error(errorData.message || '백엔드 인증 실패');
@@ -57,6 +60,10 @@ function MainPage() {
           const errorText = await response.text();
           throw new Error(`서버 오류: ${response.status} - ${errorText.slice(0, 100)}...`);
         }
+      }
+
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('서버 응답이 JSON 형식이 아닙니다.');
       }
 
       const data = await response.json();
