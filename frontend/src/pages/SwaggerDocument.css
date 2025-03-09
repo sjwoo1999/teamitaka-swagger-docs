@@ -3,46 +3,53 @@
 /* Google Fonts에서 Noto Sans KR 가져오기 */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
 
-/* Swagger UI 전체에 기본 폰트 및 텍스트 스타일 적용 */
+/* Swagger UI 전체 스타일 */
 .swagger-ui {
   font-family: 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Roboto', sans-serif;
-  font-size: 16px; /* 기본 글자 크기 */
-  line-height: 1.5; /* 줄 높이로 가독성 확보 */
-  letter-spacing: 0.5px; /* 글자 간격 조정 */
-  color: #333; /* 텍스트 색상 */
-  font-weight: 400; /* 기본 폰트 굵기 설정 */
-  white-space: normal; /* 텍스트 흐름 정상화 */
-  word-break: normal; /* 단어 단위로 줄바꿈 */
-  overflow-wrap: break-word; /* 긴 단어는 줄바꿈 */
+  font-size: 16px;
+  line-height: 1.6; /* 약간 더 여유로운 줄 간격 */
+  letter-spacing: 0.5px;
+  color: #2c3e50; /* 부드러운 어두운 회색 */
+  font-weight: 400;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
+  background: linear-gradient(135deg, #ecf0f1, #bdc3c7); /* 부드러운 그라데이션 배경 */
+  min-height: 100vh; /* 전체 화면 높이 */
 }
 
-/* API 정보 섹션 (제목 등) 스타일 */
+/* API 정보 섹션 */
 .swagger-ui .info .title {
-  font-size: 24px;
+  font-size: 28px; /* 약간 더 크게 */
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  color: #34495e;
 }
 
 .swagger-ui .info .description {
   font-size: 14px;
-  color: #666;
-  white-space: normal; /* 설명 텍스트 흐름 정상화 */
+  color: #7f8c8d;
+  white-space: normal;
+  max-width: 800px; /* 텍스트 너비 제한 */
 }
 
 /* 엔드포인트 요약 섹션 */
 .swagger-ui .opblock-summary {
   font-size: 14px;
   font-weight: 500;
-  display: flex; /* Flexbox로 요소 정렬 */
+  display: flex;
   align-items: center;
-  gap: 10px; /* 요소 간 간격 추가 */
+  gap: 12px; /* 요소 간 간격 조정 */
+  padding: 8px 12px;
+  background-color: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 미묘한 그림자 */
 }
 
-/* 경로 섹션 */
 .swagger-ui .opblock-summary-path {
   font-weight: 500;
-  color: #2a2a2a;
-  white-space: nowrap; /* 경로는 한 줄 유지 */
+  color: #2c3e50;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -50,74 +57,87 @@
 /* 엔드포인트 설명 섹션 */
 .swagger-ui .opblock-description-wrapper {
   font-size: 14px;
-  color: #444;
-  padding: 10px;
-  white-space: normal; /* 설명 텍스트 흐름 정상화 */
-  overflow-wrap: break-word; /* 긴 단어는 줄바꿈 */
+  color: #7f8c8d;
+  padding: 12px;
+  white-space: normal;
+  overflow-wrap: break-word;
+  background-color: #ffffff;
+  border-radius: 4px;
 }
 
 /* 엔드포인트 블록 스타일 */
 .swagger-ui .opblock {
   margin-bottom: 20px;
-  border-radius: 4px;
-  padding: 10px; /* 내부 여백 추가 */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 추가로 입체감 */
+  border-radius: 6px;
+  padding: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* 더 부드러운 그림자 */
 }
 
-/* 블록 내부 스타일 */
 .swagger-ui .opblock-body {
   padding: 15px;
-  background-color: #fafafa; /* 더 밝고 깔끔한 배경색 */
+  background-color: #f9fbfd; /* 연한 파스텔 톤 */
 }
 
 /* 버튼 스타일 */
 .swagger-ui .btn {
   font-size: 14px;
   padding: 8px 16px;
-  border-radius: 4px;
-  transition: background-color 0.3s ease; /* 호버 시 부드러운 전환 */
+  border-radius: 6px;
+  background-color: #3498db; /* 부드러운 파란색 */
+  color: #ffffff;
+  border: none;
+  transition: all 0.3s ease;
 }
 
 .swagger-ui .btn:hover {
-  background-color: #e0e0e0; /* 호버 시 배경색 변경 */
+  background-color: #2980b9; /* 호버 시 색상 변화 */
+  transform: translateY(-1px); /* 살짝 위로 올라오는 효과 */
 }
 
 /* 응답 상태 및 설명 */
 .swagger-ui .response-col_status {
   font-weight: 500;
-  color: #2a2a2a;
+  color: #2c3e50;
 }
 
 .swagger-ui .response-col_description {
   font-size: 14px;
-  color: #444; /* 더 진한 색상으로 가독성 향상 */
-  white-space: normal; /* 응답 설명 흐름 정상화 */
-  overflow-wrap: break-word; /* 긴 단어는 줄바꿈 */
+  color: #7f8c8d;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 /* 코드 블록 스타일 */
 .swagger-ui .highlight-code {
   font-family: 'Noto Sans KR', monospace;
   font-size: 13px;
-  background-color: #f5f5f5; /* 배경색 추가로 구분 */
-  padding: 10px; /* 내부 여백 추가 */
-  border-radius: 4px; /* 모서리 둥글게 */
-  white-space: pre-wrap; /* 코드 블록은 공백과 줄바꿈 유지 */
-  word-break: break-word; /* 긴 단어는 줄바꿈 */
+  background-color: #ecf0f1;
+  padding: 12px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-left: 4px solid #3498db; /* 코드 블록 왼쪽에 강조선 */
 }
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .swagger-ui {
-    font-size: 14px; /* 작은 화면에서 폰트 크기 축소 */
-    min-width: 300px; /* 최소 폭 설정 */
+    font-size: 14px;
+    min-width: 300px;
+    padding: 10px;
   }
 
   .swagger-ui .opblock {
-    padding: 5px; /* 여백 축소 */
+    padding: 8px;
   }
 
   .swagger-ui .info .title {
-    font-size: 20px; /* 제목 크기 조정 */
+    font-size: 20px;
+  }
+
+  .swagger-ui .opblock-summary {
+    flex-direction: column; /* 작은 화면에서 세로 정렬 */
+    align-items: flex-start;
   }
 }
