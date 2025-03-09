@@ -5,11 +5,12 @@
 
 /* Swagger UI 전체에 기본 폰트 및 텍스트 스타일 적용 */
 .swagger-ui {
-  font-family: 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  font-family: 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Roboto', sans-serif;
   font-size: 16px; /* 기본 글자 크기 */
   line-height: 1.5; /* 줄 높이로 가독성 확보 */
   letter-spacing: 0.5px; /* 글자 간격 조정 */
   color: #333; /* 텍스트 색상 */
+  font-weight: 400; /* 기본 폰트 굵기 설정 */
 }
 
 /* API 정보 섹션 (제목 등) 스타일 */
@@ -28,6 +29,8 @@
 .swagger-ui .opblock-summary {
   font-size: 14px;
   font-weight: 500;
+  display: flex; /* Flexbox로 요소 정렬 */
+  align-items: center;
 }
 
 .swagger-ui .opblock-summary-path {
@@ -46,11 +49,12 @@
 .swagger-ui .opblock {
   margin-bottom: 20px;
   border-radius: 4px;
+  padding: 10px; /* 내부 여백 추가 */
 }
 
 .swagger-ui .opblock-body {
   padding: 15px;
-  background-color: #f9f9f9; /* 배경색으로 깔끔함 강조 */
+  background-color: #fafafa; /* 더 밝고 깔끔한 배경색 */
 }
 
 /* 버튼 스타일 */
@@ -68,11 +72,29 @@
 
 .swagger-ui .response-col_description {
   font-size: 14px;
-  color: #555;
+  color: #444; /* 더 진한 색상으로 가독성 향상 */
 }
 
 /* 코드 블록 스타일 */
 .swagger-ui .highlight-code {
   font-family: 'Noto Sans KR', monospace;
   font-size: 13px;
+  background-color: #f5f5f5; /* 배경색 추가로 구분 */
+  padding: 10px; /* 내부 여백 추가 */
+  border-radius: 4px; /* 모서리 둥글게 */
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .swagger-ui {
+    font-size: 14px; /* 작은 화면에서 폰트 크기 축소 */
+  }
+
+  .swagger-ui .opblock {
+    padding: 5px; /* 여백 축소 */
+  }
+
+  .swagger-ui .info .title {
+    font-size: 20px; /* 제목 크기 조정 */
+  }
 }
