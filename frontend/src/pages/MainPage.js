@@ -48,10 +48,10 @@ function MainPage() {
         throw new Error(errorMessage);
       }
 
-      const data = await response.json();
-      setMessage(`로그인 성공! 환영합니다, ${data.uid}.`);
+      // const data = await response.json();
+      setMessage(`로그인 성공! 환영합니다!`);
       localStorage.setItem('token', idToken);
-      console.log('로그인 성공, 사용자 UID:', data.uid);
+      console.log('로그인 성공!');
       setTimeout(() => navigate('/api-docs'), 1000);
     } catch (error) {
       setMessage(error.message || '로그인에 실패했습니다. 다시 시도해주세요.');
