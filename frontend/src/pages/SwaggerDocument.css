@@ -15,7 +15,6 @@
   word-break: normal;
   overflow-wrap: break-word;
   background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
-  background-image: url('path/to/subtle-pattern.png'); /* 실제 패턴 이미지 경로 필요 */
   background-blend-mode: overlay;
   min-height: 100vh;
   padding: 30px;
