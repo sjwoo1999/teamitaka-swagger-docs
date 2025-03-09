@@ -13,6 +13,7 @@
   font-weight: 400; /* 기본 폰트 굵기 설정 */
   white-space: normal; /* 텍스트 흐름 정상화 */
   word-break: normal; /* 단어 단위로 줄바꿈 */
+  overflow-wrap: break-word; /* 긴 단어는 줄바꿈 */
 }
 
 /* API 정보 섹션 (제목 등) 스타일 */
@@ -34,8 +35,10 @@
   font-weight: 500;
   display: flex; /* Flexbox로 요소 정렬 */
   align-items: center;
+  gap: 10px; /* 요소 간 간격 추가 */
 }
 
+/* 경로 섹션 */
 .swagger-ui .opblock-summary-path {
   font-weight: 500;
   color: #2a2a2a;
@@ -50,6 +53,7 @@
   color: #444;
   padding: 10px;
   white-space: normal; /* 설명 텍스트 흐름 정상화 */
+  overflow-wrap: break-word; /* 긴 단어는 줄바꿈 */
 }
 
 /* 엔드포인트 블록 스타일 */
@@ -57,8 +61,10 @@
   margin-bottom: 20px;
   border-radius: 4px;
   padding: 10px; /* 내부 여백 추가 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 추가로 입체감 */
 }
 
+/* 블록 내부 스타일 */
 .swagger-ui .opblock-body {
   padding: 15px;
   background-color: #fafafa; /* 더 밝고 깔끔한 배경색 */
@@ -69,6 +75,11 @@
   font-size: 14px;
   padding: 8px 16px;
   border-radius: 4px;
+  transition: background-color 0.3s ease; /* 호버 시 부드러운 전환 */
+}
+
+.swagger-ui .btn:hover {
+  background-color: #e0e0e0; /* 호버 시 배경색 변경 */
 }
 
 /* 응답 상태 및 설명 */
@@ -81,6 +92,7 @@
   font-size: 14px;
   color: #444; /* 더 진한 색상으로 가독성 향상 */
   white-space: normal; /* 응답 설명 흐름 정상화 */
+  overflow-wrap: break-word; /* 긴 단어는 줄바꿈 */
 }
 
 /* 코드 블록 스타일 */
@@ -98,6 +110,7 @@
 @media (max-width: 768px) {
   .swagger-ui {
     font-size: 14px; /* 작은 화면에서 폰트 크기 축소 */
+    min-width: 300px; /* 최소 폭 설정 */
   }
 
   .swagger-ui .opblock {
