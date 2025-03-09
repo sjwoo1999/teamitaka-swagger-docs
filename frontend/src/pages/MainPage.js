@@ -14,31 +14,46 @@ function MainPage() {
 
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
+  // CSRF 토큰 가져오기
   useEffect(() => {
     const fetchCsrfToken = async () => {
       try {
         const response = await fetch(`${API_URL}/csrf-token`, { credentials: 'include' });
-        if (!response.ok) throw new Error('CSRF 토큰 요청 실패');
+        if (!response.ok) {
+          throw new Error(`CSRF 토큰 요청 실패: 상태 코드 ${response.status}`);
+        }
+        const contentType = response.headers.get('Content-Type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error('CSRF 토큰 응답이 JSON 형식이 아닙니다.');
+        }
         const data = await response.json();
         setCsrfToken(data.csrfToken);
-        console.log('CSRF 토큰:', data.csrfToken); // 디버깅용
+        console.log('CSRF 토큰 획득 성공:', data.csrfToken); // 디버깅용
       } catch (error) {
         console.error('CSRF 토큰 가져오기 실패:', error);
-        setMessage('CSRF 토큰을 가져오지 못했습니다.');
+        setMessage(`CSRF 토큰을 가져오지 못했습니다: ${error.message}`);
       }
     };
     fetchCsrfToken();
   }, [API_URL]);
 
+  // 로그인 처리
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('로그인 시도 중...');
+
+    // CSRF 토큰 확인
+    if (!csrfToken) {
+      setMessage('CSRF 토큰이 없습니다. 페이지를 새로고침하세요.');
+      console.warn('CSRF 토큰 누락으로 요청 중단');
+      return;
+    }
 
     try {
       // Firebase 인증
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const idToken = await userCredential.user.getIdToken();
-      console.log('Firebase idToken:', idToken); // 디버깅용
+      console.log('Firebase 인증 성공, idToken:', idToken); // 디버깅용
 
       // 백엔드 요청
       const response = await fetch(`${API_URL}/api/auth/login`, {
@@ -53,13 +68,15 @@ function MainPage() {
 
       const contentType = response.headers.get('Content-Type');
       if (!response.ok) {
+        let errorMessage = `서버 오류: ${response.status}`;
         if (contentType && contentType.includes('application/json')) {
           const errorData = await response.json();
-          throw new Error(errorData.message || '백엔드 인증 실패');
+          errorMessage = errorData.message || '백엔드 인증 실패';
         } else {
           const errorText = await response.text();
-          throw new Error(`서버 오류: ${response.status} - ${errorText.slice(0, 100)}...`);
+          errorMessage += ` - ${errorText.slice(0, 100)}...`;
         }
+        throw new Error(errorMessage);
       }
 
       if (!contentType || !contentType.includes('application/json')) {
@@ -69,10 +86,11 @@ function MainPage() {
       const data = await response.json();
       setMessage(`로그인 성공! 환영합니다, ${data.uid}.`);
       localStorage.setItem('token', idToken);
+      console.log('로그인 성공, 사용자 UID:', data.uid); // 디버깅용
       setTimeout(() => navigate('/api-docs'), 1000);
     } catch (error) {
       setMessage(error.message || '로그인에 실패했습니다. 다시 시도해주세요.');
-      console.error('로그인 에러:', error);
+      console.error('로그인 처리 중 오류:', error);
     }
   };
 
