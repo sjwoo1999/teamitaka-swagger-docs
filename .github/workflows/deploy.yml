@@ -23,6 +23,32 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      - name: Install Firebase Admin
+        run: npm install firebase-admin
+
+      - name: Set up Firebase Service Account
+        run: |
+          if [ -z "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" ]; then
+            echo "Secret FIREBASE_SERVICE_ACCOUNT_KEY_B64 is not set."
+            exit 1
+          fi
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | base64 -d > serviceAccountKey.json
+          if [ ! -s serviceAccountKey.json ]; then
+            echo "File is empty or does not exist."
+            exit 1
+          fi
+          if jq -e . serviceAccountKey.json > /dev/null; then
+            echo "JSON is valid."
+          else
+            echo "Invalid JSON."
+            exit 1
+          fi
+
+      - name: Download swagger.yaml from Firebase Storage
+        run: node downloadSwagger.js
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ./serviceAccountKey.json
+
       - name: Build Frontend
         env:
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
@@ -42,24 +68,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y jq
-
-      - name: Set up Firebase Service Account
-        run: |
-          if [ -z "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" ]; then
-            echo "Secret FIREBASE_SERVICE_ACCOUNT_KEY_B64 is not set."
-            exit 1
-          fi
-          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | base64 -d > serviceAccountKey.json
-          if [ ! -s serviceAccountKey.json ]; then
-            echo "File is empty or does not exist."
-            exit 1
-          fi
-          if jq -e . serviceAccountKey.json > /dev/null; then
-            echo "JSON is valid."
-          else
-            echo "Invalid JSON."
-            exit 1
-          fi
 
       - name: Deploy Frontend to Firebase Hosting
         run: firebase deploy --only hosting:production --project teamitaka-swagger-practice --non-interactive

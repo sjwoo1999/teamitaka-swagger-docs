@@ -18,8 +18,14 @@ const app = express();
 
 const CLIENT_URL = process.env.CLIENT_URL || "https://teamitaka-swagger-practice.web.app";
 
-const swaggerFile = fs.readFileSync(path.join(__dirname, "swagger.yaml"), "utf8");
-const swaggerDocument = yaml.parse(swaggerFile);
+let swaggerDocument;
+try {
+  const swaggerFile = fs.readFileSync(path.join(__dirname, "swagger.yaml"), "utf8");
+  swaggerDocument = yaml.parse(swaggerFile);
+} catch (error) {
+  logger.error("Swagger YAML 파일 로드 또는 파싱 실패: ", error);
+  swaggerDocument = { error: "Swagger 문서 로드 실패" };
+}
 
 app.use(cors({ origin: CLIENT_URL, credentials: true }));
 app.use(cookieParser());
@@ -37,6 +43,11 @@ app.get("/", (req, res) => {
 
 // 라우트 설정
 app.use("/api/auth", authRoutes);
+
+app.get("/api-docs/swagger.json", authenticateJWT, (req, res) => {
+  res.set("Content-Type", "application/json");
+  res.send(swaggerDocument);
+});
 
 app.get("/api-docs/swagger.json", authenticateJWT, (req, res) => {
   res.set("Content-Type", "application/json");
