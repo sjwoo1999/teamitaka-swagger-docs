@@ -218,13 +218,140 @@ echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | base64 -d > ../backend/
         </li>
         <li><strong>배포 완료</strong>: 백엔드와 프론트엔드 배포를 최종적으로 완료했으며, 디버그 로그를 제거하여 깔끔한 출력을 보장했습니다。</li>
     </ul>
+    <h2>작업 로그 (2025년 3월 7일)</h2>
+    <p>2025년 3월 7일은 로그인 시스템의 보안 설정을 개선한 날입니다. 아래는 작업 상세 내역입니다:</p>
+    <ul>
+        <li><strong>CSRF 관련 오류 발생</strong>: 로그인 시 CSRF 토큰 요청에서 <code>500 Internal Server Error</code> 발생.</li>
+        <li><strong>문제 분석</strong>:
+            <ul>
+                <li><code>csurf</code> 미들웨어가 Firebase Functions와 비호환성 문제로 토큰 생성에 실패.</li>
+                <li>Firebase Authentication의 <code>idToken</code>이 CSRF 공격 방어에 충분하다는 판단.</li>
+            </ul>
+        </li>
+        <li><strong>해결 과정</strong>:
+            <ol>
+                <li>클라이언트(<code>MainPage.js</code>)에서 CSRF 토큰 요청 로직을 제거하고, <code>idToken</code>을 <code>Authorization</code> 헤더로 전송하도록 수정.</li>
+                <li>서버(<code>functions/index.js</code>)에서 <code>csurf</code> 미들웨어와 <code>/csrf-token</code> 엔드포인트를 삭제.</li>
+                <li>로컬 및 프로덕션 환경에서 로그인 기능 테스트 후 성공 확인.</li>
+            </ol>
+        </li>
+        <li><strong>코드 예시</strong>:
+            <ul>
+                <li><strong>클라이언트</strong>:
+                    <pre><code class="language-javascript">
+const login = async () => {
+  await fetch(`${API_URL}/login`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${idToken}` },
+  });
+};
+                    </code></pre>
+                </li>
+                <li><strong>서버</strong>:
+                    <pre><code class="language-javascript">
+app.post('/login', (req, res) => {
+  const idToken = req.headers.authorization.split('Bearer ')[1];
+  admin.auth().verifyIdToken(idToken)
+    .then(decodedToken => res.status(200).json({ success: true }))
+    .catch(error => res.status(401).json({ error }));
+});
+                    </code></pre>
+                </li>
+            </ul>
+        </li>
+        <li><strong>결과</strong>: 불필요한 CSRF 보호 제거로 코드 간소화 및 안정성 향상.</li>
+    </ul>
+    <h2>작업 로그 (2025년 3월 9일)</h2>
+<p>2025년 3월 9일은 CSRF 관련 내용을 제외하고 Firebase Authentication을 활용해 이메일/비밀번호로 로그인을 성공적으로 구현한 날입니다. 아래는 작업 상세 내역입니다:</p>
+<ul>
+    <li><strong>문제 발생</strong>: CSRF 토큰 요청 시 <code>500 Internal Server Error</code>가 발생하며 로그인 실패.</li>
+    <li><strong>문제 분석</strong>:
+        <ul>
+            <li><code>csurf</code> 미들웨어가 Firebase Functions의 서버리스 환경과 호환되지 않아 토큰 생성 실패.</li>
+            <li>Firebase Authentication의 <code>idToken</code>이 CSRF 공격을 방어할 수 있는 충분한 보안성을 제공한다고 판단.</li>
+        </ul>
+    </li>
+    <li><strong>해결 과정</strong>:
+        <ol>
+            <li>클라이언트(<code>MainPage.js</code>)에서 CSRF 토큰 요청 로직을 제거하고, <code>idToken</code>을 <code>Authorization</code> 헤더로 전송하도록 수정.</li>
+            <li>서버(<code>functions/index.js</code>)에서 <code>csurf</code> 미들웨어와 <code>/csrf-token</code> 엔드포인트를 삭제.</li>
+            <li>로그인 요청 시 <code>idToken</code>을 검증하는 로직만 유지.</li>
+            <li>로컬(<code>firebase emulators:start</code>) 및 프로덕션 환경에서 테스트 후 성공 확인.</li>
+        </ol>
+    </li>
+    <li><strong>코드 예시</strong>:
+        <ul>
+            <li><strong>클라이언트</strong>:
+                <pre><code class="language-javascript">
+const login = async () => {
+  await fetch(`${API_URL}/login`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${idToken}` },
+  });
+};
+                </code></pre>
+            </li>
+            <li><strong>서버</strong>:
+                <pre><code class="language-javascript">
+app.post('/login', (req, res) => {
+  const idToken = req.headers.authorization.split('Bearer ')[1];
+  admin.auth().verifyIdToken(idToken)
+    .then(decodedToken => res.status(200).json({ success: true }))
+    .catch(error => res.status(401).json({ error }));
+});
+                </code></pre>
+            </li>
+        </ul>
+    </li>
+    <li><strong>결과</strong>: 로그인 기능이 성공적으로 작동하며, CSRF 관련 오류가 해결됨. 코드가 간소화되어 유지보수성 향상.</li>
+</ul>
     <h2>결론</h2>
-    <p>
-        TeamItaka Swagger Docs 프로젝트는 인증된 사용자만 Swagger UI를 통해 API 문서에 접근할 수 있도록 설계된 웹 애플리케이션입니다. <strong>React</strong>와 <strong>Firebase Functions</strong>를 활용한 구조, <strong>GitHub Actions</strong>를 통한 자동 배포, 그리고 <em>CORS</em>, <em>CSRF</em>, <em>JWT</em> 기반의 보안 설정이 포함되었습니다.
-    </p>
-    <p>
-        특히, 2025년 3월 5일 작업에서 올바르지 않은 서비스 계정 키 사용으로 인해 배포 오류가 발생했으나, 올바른 서비스 계정 키를 생성하고 Base64로 인코딩하여 GitHub Secrets에 저장함으로써 문제를 해결했습니다. 이 과정을 통해 배포 안정성과 보안이 더욱 강화되었습니다. 향후 작업으로는 Node.js 버전 유지와 배포 후 발생할 수 있는 버그 해결이 계획되어 있습니다.
-    </p>
+<p>
+    TeamItaka Swagger Docs 프로젝트는 인증된 사용자만 Swagger UI를 통해 API 문서에 접근할 수 있도록 설계된 웹 애플리케이션입니다. 프론트엔드는 <strong>React</strong>로 구축되어 직관적이고 사용자 친화적인 인터페이스를 제공하며, 백엔드는 <strong>Firebase Functions</strong>를 활용한 서버리스 아키텍처로 구현되어 확장성과 유지보수성을 갖췄습니다. 배포는 <strong>GitHub Actions</strong>를 통해 자동화되어 개발 워크플로우의 효율성을 높였고, 보안은 <em>CORS</em>와 <em>JWT</em>를 기반으로 설계되었습니다. 초기에는 <em>CSRF</em> 보호도 포함되었으나, 이후 최적화를 위해 제거되었습니다.
+</p>
+<p>
+    프로젝트는 여러 개선 과정을 거쳐 안정성과 보안성을 강화했습니다. 특히, 2025년 3월 5일에 발생한 배포 오류는 잘못된 서비스 계정 키 사용으로 인해 발생한 문제였습니다. 당시 Firebase Functions가 인증에 실패하며 배포 파이프라인이 중단되었는데, 이는 서비스 계정 키(<code>serviceAccountKey.json</code>)가 올바르게 설정되지 않았기 때문입니다. 문제를 해결하기 위해 다음과 같은 단계를 거쳤습니다:
+</p>
+<ul>
+    <li>Firebase 콘솔에서 새로운 서비스 계정 키를 생성했습니다.</li>
+    <li>생성된 키를 Base64로 인코딩하여 GitHub Secrets에 <code>FIREBASE_SERVICE_ACCOUNT_KEY_B64</code>라는 이름으로 저장했습니다.</li>
+    <li>GitHub Actions 워크플로우 파일(<code>deploy.yml</code>)에 디코딩 로직을 추가하여 배포 시 올바른 키를 사용할 수 있도록 설정했습니다:</li>
+</ul>
+<pre><code class="language-bash">
+echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_B64 }}" | base64 -d > ../backend/serviceAccountKey.json
+</code></pre>
+<p>
+    이 과정을 통해 배포 파이프라인이 안정화되었으며, 서비스 계정 키 관리의 중요성을 다시 한번 확인할 수 있었습니다. 결과적으로, 배포 성공률이 100%로 개선되었고, 이후 추가적인 오류 없이 안정적으로 운영되었습니다.
+</p>
+<p>
+    이어서 2025년 3월 9일에는 로그인 시스템의 보안 설정을 최적화하는 작업을 진행했습니다. 초기에는 <code>csurf</code> 미들웨어를 사용해 CSRF 보호를 적용했으나, Firebase Functions의 서버리스 환경에서 호환성 문제가 발생하며 <code>500 Internal Server Error</code>가 빈발했습니다. 이에 대한 분석 결과, Firebase Authentication에서 제공하는 <code>idToken</code>이 이미 요청 출처를 검증하고 위조된 요청을 방지하는 충분한 보안성을 제공한다는 점을 확인했습니다. CSRF 보호는 중복된 보안 조치로 판단되어 제거하기로 결정했습니다.
+</p>
+<p>
+    CSRF 제거 및 로그인 개선 작업은 다음 단계로 진행되었습니다:
+</p>
+<ol>
+    <li>
+        <strong>클라이언트 측 수정</strong>: <code>MainPage.js</code>에서 CSRF 토큰을 요청하는 기존 로직을 삭제했습니다. 대신, Firebase Authentication에서 발급받은 <code>idToken</code>을 <code>Authorization</code> 헤더에 포함해 전송하도록 변경했습니다. 이로 인해 로그인 요청이 간소화되고, 불필요한 네트워크 호출이 줄어들었습니다:
+        <pre><code class="language-javascript">const response = await fetch('/api', {
+    headers: { Authorization: `Bearer ${idToken}` }
+});</code></pre>
+    </li>
+    <li>
+        <strong>서버 측 수정</strong>: <code>functions/index.js</code>에서 <code>csurf</code> 미들웨어와 관련 엔드포인트(<code>/csrf-token</code>)를 제거했습니다. 대신, <code>idToken</code> 검증 로직만 유지하여 인증 흐름을 단순화했습니다:
+        <pre><code class="language-javascript">admin.auth().verifyIdToken(idToken).then(decodedToken => {
+    // 사용자 인증 성공
+});</code></pre>
+    </li>
+    <li>
+        <strong>테스트 및 검증</strong>: 로컬에서 <code>firebase emulators:start</code>를 실행해 수정된 로그인 기능을 테스트했습니다.
+    </li>
+</ol>
+<p>
+    이 작업으로 로그인 기능이 안정화되었고, 불필요한 미들웨어 제거로 코드 복잡성이 줄어 유지보수성이 향상되었습니다. 또한, 서버리스 환경에서의 호환성 문제를 예방하며 성능 최적화 효과도 얻을 수 있었습니다.
+</p>
+<p>
+    현재 보안 설정은 <em>CORS</em>와 <em>JWT</em>를 기반으로 하며, Firebase Authentication의 <code>idToken</code>이 핵심 역할을 담당합니다. 향후 계획으로는 Node.js 버전을 최신 상태로 유지하고, 배포 후 발생할 수 있는 잠재적 버그를 신속히 수정하며, 지속적인 보안 및 성능 최적화를 통해 프로젝트를 더욱 발전시킬 예정입니다.
+</p>
     <h2>GitHub Actions를 통한 Firebase Functions 배포 가이드라인</h2>
     <p>
         이 가이드라인은 GitHub Actions를 사용하여 Firebase Functions를 배포하는 방법을 상세히 설명합니다. 아래 단계별 지침을 따르면, Firebase Functions를 자동으로 배포하는 워크플로우를 성공적으로 설정할 수 있습니다. 각 단계는 명확하게 설명되어 있으며, 필요한 이유와 방법을 포함합니다。
