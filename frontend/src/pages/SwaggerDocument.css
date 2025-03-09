@@ -11,6 +11,8 @@
   letter-spacing: 0.5px; /* 글자 간격 조정 */
   color: #333; /* 텍스트 색상 */
   font-weight: 400; /* 기본 폰트 굵기 설정 */
+  white-space: normal; /* 텍스트 흐름 정상화 */
+  word-break: normal; /* 단어 단위로 줄바꿈 */
 }
 
 /* API 정보 섹션 (제목 등) 스타일 */
@@ -23,6 +25,7 @@
 .swagger-ui .info .description {
   font-size: 14px;
   color: #666;
+  white-space: normal; /* 설명 텍스트 흐름 정상화 */
 }
 
 /* 엔드포인트 요약 섹션 */
@@ -36,6 +39,9 @@
 .swagger-ui .opblock-summary-path {
   font-weight: 500;
   color: #2a2a2a;
+  white-space: nowrap; /* 경로는 한 줄 유지 */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* 엔드포인트 설명 섹션 */
@@ -43,6 +49,7 @@
   font-size: 14px;
   color: #444;
   padding: 10px;
+  white-space: normal; /* 설명 텍스트 흐름 정상화 */
 }
 
 /* 엔드포인트 블록 스타일 */
@@ -73,6 +80,7 @@
 .swagger-ui .response-col_description {
   font-size: 14px;
   color: #444; /* 더 진한 색상으로 가독성 향상 */
+  white-space: normal; /* 응답 설명 흐름 정상화 */
 }
 
 /* 코드 블록 스타일 */
@@ -82,6 +90,8 @@
   background-color: #f5f5f5; /* 배경색 추가로 구분 */
   padding: 10px; /* 내부 여백 추가 */
   border-radius: 4px; /* 모서리 둥글게 */
+  white-space: pre-wrap; /* 코드 블록은 공백과 줄바꿈 유지 */
+  word-break: break-word; /* 긴 단어는 줄바꿈 */
 }
 
 /* 반응형 디자인 */
