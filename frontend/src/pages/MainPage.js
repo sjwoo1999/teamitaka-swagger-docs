@@ -64,7 +64,7 @@ function MainPage() {
   return (
     <div className="login-page">
       <div className="login-container">
-        <h1>로그인</h1>
+        <h1>TEAMITAKA SWAGGER DOCUMENT</h1>
         <p>승인된 사용자만 접근 가능합니다.</p>
         <form onSubmit={handleSubmit}>
           <div className="input-group">
