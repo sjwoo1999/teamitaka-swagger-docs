@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../config/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -9,10 +9,24 @@ function MainPage() {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [csrfToken, setCsrfToken] = useState('');
   const navigate = useNavigate();
 
-  // 환경 변수에서 API URL 가져오기
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+
+  // CSRF 토큰 가져오기
+  useEffect(() => {
+    const fetchCsrfToken = async () => {
+      try {
+        const response = await fetch(`${API_URL}/csrf-token`, { credentials: 'include' });
+        const data = await response.json();
+        setCsrfToken(data.csrfToken);
+      } catch (error) {
+        console.error('CSRF 토큰 가져오기 실패:', error);
+      }
+    };
+    fetchCsrfToken();
+  }, [API_URL]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,26 +40,23 @@ function MainPage() {
       // 백엔드 요청
       const response = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken,
+        },
         body: JSON.stringify({ idToken }),
+        credentials: 'include',
       });
 
-      // 응답 상태 확인
       if (!response.ok) {
         const contentType = response.headers.get('Content-Type');
         if (contentType && contentType.includes('application/json')) {
           const errorData = await response.json();
-          throw new Error(errorData.details || errorData.error || '백엔드 인증 실패');
+          throw new Error(errorData.message || '백엔드 인증 실패');
         } else {
           const errorText = await response.text();
           throw new Error(`서버 오류: ${response.status} - ${errorText.slice(0, 100)}...`);
         }
-      }
-
-      // JSON 형식 확인
-      const contentType = response.headers.get('Content-Type');
-      if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('서버 응답이 JSON 형식이 아닙니다.');
       }
 
       const data = await response.json();

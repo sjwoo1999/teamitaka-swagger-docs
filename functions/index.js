@@ -38,26 +38,16 @@ app.get("/csrf-token", (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
 });
 
-app.post('/auth/login', (req, res) => {
-  const { idToken } = req.body;
-  admin.auth().verifyIdToken(idToken)
-    .then((decodedToken) => {
-      res.status(200).json({ message: '로그인 성공', uid: decodedToken.uid });
-    })
-    .catch((error) => {
-      res.status(401).json({ message: '로그인 실패', error: error.message });
-    });
-});
-
 // CSRF 보호 적용
 app.use(csrfProtection);
+
+// 라우트 설정
+app.use("/api/auth", authRoutes); // 경로 수정
 
 app.get("/api-docs/swagger.json", authenticateJWT, (req, res) => {
   res.set("Content-Type", "application/json");
   res.send(swaggerDocument);
 });
-
-app.use("/auth", authRoutes);
 
 app.get("/protected", authenticateJWT, (req, res) => {
   res.send("This is a protected route");
