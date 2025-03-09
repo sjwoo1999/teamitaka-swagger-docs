@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import SwaggerUI from 'swagger-ui-react';
-import 'swagger-ui-react/swagger-ui.css';
-// import './SwaggerDocument.css';
+// import 'swagger-ui-react/swagger-ui.css';
+import './SwaggerDocument.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
