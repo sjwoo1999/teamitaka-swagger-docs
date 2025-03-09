@@ -17,14 +17,19 @@ function MainPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('로그인 시도 중...');
-  
+
     try {
+      // Firebase 인증
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const idToken = await userCredential.user.getIdToken();
+
+      // 백엔드 요청
       const response = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idToken }),
       });
-  
+
       // 응답 상태 확인
       if (!response.ok) {
         const contentType = response.headers.get('Content-Type');
@@ -36,13 +41,13 @@ function MainPage() {
           throw new Error(`서버 오류: ${response.status} - ${errorText.slice(0, 100)}...`);
         }
       }
-  
+
       // JSON 형식 확인
       const contentType = response.headers.get('Content-Type');
       if (!contentType || !contentType.includes('application/json')) {
         throw new Error('서버 응답이 JSON 형식이 아닙니다.');
       }
-  
+
       const data = await response.json();
       setMessage(`로그인 성공! 환영합니다, ${data.uid}.`);
       localStorage.setItem('token', idToken);
