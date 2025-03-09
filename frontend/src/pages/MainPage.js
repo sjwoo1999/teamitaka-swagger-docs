@@ -17,32 +17,36 @@ function MainPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('로그인 시도 중...');
-
+  
     try {
-      // 1. Firebase Authentication으로 로그인
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const idToken = await userCredential.user.getIdToken();
-
-      // 2. 백엔드에 idToken 전송
       const response = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idToken }),
       });
-
+  
+      // 응답 상태 확인
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || '백엔드 인증 실패');
+        const contentType = response.headers.get('Content-Type');
+        if (contentType && contentType.includes('application/json')) {
+          const errorData = await response.json();
+          throw new Error(errorData.details || errorData.error || '백엔드 인증 실패');
+        } else {
+          const errorText = await response.text();
+          throw new Error(`서버 오류: ${response.status} - ${errorText.slice(0, 100)}...`);
+        }
       }
-
+  
+      // JSON 형식 확인
+      const contentType = response.headers.get('Content-Type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('서버 응답이 JSON 형식이 아닙니다.');
+      }
+  
       const data = await response.json();
-      setMessage(`로그인 성공! 환영합니다, ${data.uid}`);
-
-      // 3. 토큰 저장 및 페이지 이동
-      localStorage.setItem('token', idToken); // 클라이언트에서 재사용 가능
-      setTimeout(() => navigate('/dashboard'), 1000); // 예: 대시보드로 이동
+      setMessage(`로그인 성공! 환영합니다, ${data.uid}.`);
+      localStorage.setItem('token', idToken);
+      setTimeout(() => navigate('/api-docs'), 1000);
     } catch (error) {
       setMessage(error.message || '로그인에 실패했습니다. 다시 시도해주세요.');
       console.error('로그인 에러:', error);
